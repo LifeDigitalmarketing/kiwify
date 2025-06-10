@@ -1,0 +1,158 @@
+<!DOCTYPE html><html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Kiwify Fake</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2d9d6c36b.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    body {
+      background-color: #f5f6fa;
+    }
+    header {
+      background-color: #00793f;
+      color: white;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .menu-icon {
+      font-size: 24px;
+      background-color: rgba(0,0,0,0.1);
+      padding: 8px;
+      border-radius: 50%;
+    }
+    .balance-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .balance-bar span {
+      font-weight: 600;
+    }
+    .balance-track {
+      background: #ffffff;
+      border-radius: 20px;
+      height: 8px;
+      width: 100px;
+      position: relative;
+    }
+    .balance-fill {
+      background: #00ffae;
+      height: 8px;
+      border-radius: 20px;
+      width: 0%;
+    }
+    .profile-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #ccc;
+    }
+    .container {
+      padding: 16px;
+    }
+    .title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .filters select {
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: white;
+    }
+    .card {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      margin-bottom: 12px;
+    }
+    .card .label {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card .value {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .icon {
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <i class="fas fa-bars menu-icon"></i>
+    <div class="balance-bar">
+      <i class="fas fa-gem"></i>
+      <div class="balance-track">
+        <div class="balance-fill"></div>
+      </div>
+      <span>R$ 0K / R$ 10K</span>
+    </div>
+    <div class="profile-icon"></div>
+  </header>  <div class="container">
+    <div class="title">Dashboard</div>
+    <div class="filters">
+      <select><option>Hoje</option></select>
+      <select><option>Todos os produtos</option></select>
+      <select><option>Todas as moedas</option></select>
+    </div><div class="card">
+  <div class="label"><i class="fas fa-dollar-sign icon"></i> Valor líquido</div>
+  <div class="value">R$ 0,00</div>
+</div>
+
+<div class="card">
+  <div class="label"><i class="fas fa-chart-line icon"></i> Vendas</div>
+  <div class="value">0</div>
+</div>
+
+<div class="card">
+  <div class="label"><i class="fas fa-credit-card icon"></i> Aprovação cartão</div>
+  <div class="value">0%</div>
+</div>
+
+<div class="card">
+  <div class="label"><i class="fas fa-globe icon"></i> Vendas 1-click da rede Kiwify</div>
+  <div class="value">R$ 0,00 <span style="font-weight: normal; font-size: 14px;">0%</span></div>
+</div>
+
+<div class="card">
+  <div class="label"><i class="fas fa-undo icon"></i> Reembolso</div>
+  <div class="value">0%</div>
+</div>
+
+<div class="card">
+  <div class="label"><i class="fas fa-ban icon"></i> Chargeback</div>
+  <div class="value">0%</div>
+</div>
+
+<div class="card">
+  <div class="label"><i class="fas fa-receipt icon"></i> Conversão boleto</div>
+  <div class="value">0%</div>
+</div>
+
+<div class="card">
+  <div class="label"><i class="fas fa-hashtag icon"></i> Boletos gerados</div>
+  <div class="value">0</div>
+</div>
+
+  </div>
+</body>
+</html>
