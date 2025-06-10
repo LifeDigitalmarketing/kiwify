@@ -1,226 +1,193 @@
 <!DOCTYPE html><html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard | Kiwify</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Kiwify Fake</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
   <style>
-    * {
-      box-sizing: border-box;
+    body {
       margin: 0;
-      padding: 0;
       font-family: 'Inter', sans-serif;
-    }body {
-  background: #f8f9fb;
-  color: #1f1f1f;
-}
-
-.header {
-  background: #0c7c3e;
-  padding: 10px 16px;
+      background-color: #f6f7fb;
+    }header {
+  background-color: #0b8f3f;
+  padding: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   color: white;
 }
 
-.header-left {
-  display: flex;
-  align-items: center;
-}
-
-.menu-icon {
-  font-size: 24px;
-  margin-right: 16px;
-  cursor: pointer;
-}
-
 .progress-container {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .progress-bar {
   background: white;
-  height: 6px;
-  border-radius: 6px;
+  border-radius: 9999px;
+  height: 8px;
   width: 100px;
-  overflow: hidden;
+  position: relative;
 }
 
-.progress-fill {
-  background: #0cc57c;
+.progress-bar::before {
+  content: '';
+  background: #0b8f3f;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
   width: 0%;
-  height: 100%;
+  border-radius: 9999px;
 }
 
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #eee;
+.dashboard {
+  padding: 16px;
 }
 
-.container {
-  padding: 20px;
-}
-
-h2 {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-
-.filters select {
+.dropdown {
   width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ddd;
   border-radius: 8px;
+  margin-bottom: 12px;
+  background: white;
 }
 
 .card {
   background: white;
-  padding: 16px;
-  margin: 10px 0;
   border-radius: 12px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 0 0 1px #e2e8f0;
 }
 
-.card-icon {
-  font-size: 18px;
-  color: #8e8e8e;
-  margin-right: 8px;
-}
-
-.card-title {
-  color: #8e8e8e;
+.label {
+  color: #64748b;
   font-size: 14px;
+}
+
+.value {
+  font-size: 20px;
+  color: #0f172a;
+  font-weight: 400;
+}
+
+.icon {
+  font-size: 18px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.chat-button {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background: black;
+  border-radius: 999px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
-  margin-bottom: 4px;
+  justify-content: center;
 }
 
-.card-value {
-  font-size: 18px;
-  font-weight: 500;
-  color: #1f1f1f;
-}
-
-.chart-container {
-  background: white;
-  padding: 16px;
-  border-radius: 12px;
-  margin: 10px 0;
-}
-
-.footer {
-  margin-top: 40px;
-  font-size: 12px;
-  text-align: center;
-  color: #aaa;
+.chat-button img {
+  width: 24px;
+  height: 24px;
 }
 
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="header-left">
-      <i class="bi bi-list menu-icon"></i>
-    </div>
+  <header>
+    <div></div>
     <div class="progress-container">
-      <div class="progress-bar">
-        <div class="progress-fill"></div>
-      </div>
-      <strong>R$ 0K / R$ 10K</strong>
+      <div class="progress-bar"></div>
+      <div style="font-size:14px; font-weight:500">R$ 0K / R$ 10K</div>
     </div>
-    <div class="avatar"></div>
-  </div>  <div class="container">
-    <h2>Dashboard</h2>
-    <div class="filters">
-      <select>
-        <option>Hoje</option>
-      </select>
-      <select>
-        <option>Todos os produtos</option>
-      </select>
-      <select>
-        <option>Todas as moedas</option>
-      </select>
-    </div><div class="card">
-  <div class="card-title"><i class="bi bi-currency-dollar card-icon"></i> Valor líquido</div>
-  <div class="card-value">R$ 0,00</div>
+    <div style="width:32px; height:32px; border-radius:50%; background:#ddd"></div>
+  </header>  <div class="dashboard">
+    <select class="dropdown">
+      <option>Hoje</option>
+    </select>
+    <select class="dropdown">
+      <option>Todos os produtos</option>
+    </select>
+    <select class="dropdown">
+      <option>Todas as moedas</option>
+    </select><div class="card">
+  <div class="label"><span class="icon">💲</span>Valor líquido</div>
+  <div class="value">R$ 0,00</div>
 </div>
 
 <div class="card">
-  <div class="card-title"><i class="bi bi-bar-chart-line card-icon"></i> Vendas</div>
-  <div class="card-value">0</div>
-</div>
-
-<div class="chart-container">
-  <canvas id="lineChart"></canvas>
+  <div class="label"><span class="icon">📈</span>Vendas</div>
+  <div class="value">0</div>
 </div>
 
 <div class="card">
-  <div class="card-title"><i class="bi bi-credit-card card-icon"></i> Aprovação cartão</div>
-  <div class="card-value">0%</div>
+  <canvas id="chart" height="100"></canvas>
+  <div style="display:flex; justify-content: space-between; font-size: 12px; color: #64748b; margin-top:4px">
+    <div>Hoje, 0:00</div>
+    <div>Hoje, 23:59</div>
+  </div>
 </div>
 
 <div class="card">
-  <div class="card-title"><i class="bi bi-globe card-icon"></i> Vendas 1-click da rede Kiwify</div>
-  <div class="card-value">R$ 0,00 &nbsp; 0%</div>
+  <div class="label">💳 Aprovação cartão</div>
+  <div class="value">0%</div>
 </div>
 
 <div class="card">
-  <div class="card-title"><i class="bi bi-arrow-counterclockwise card-icon"></i> Reembolso</div>
-  <div class="card-value">0%</div>
+  <div class="label">🌐 Vendas 1-click da rede Kiwify <span title="Info">❔</span></div>
+  <div class="value">R$ 0,00 <span style="font-size:14px">0%</span></div>
 </div>
 
 <div class="card">
-  <div class="card-title"><i class="bi bi-ban card-icon"></i> Chargeback</div>
-  <div class="card-value">0%</div>
+  <div class="label">📦 Reembolso</div>
+  <div class="value">0%</div>
 </div>
 
 <div class="card">
-  <div class="card-title"><i class="bi bi-receipt-cutoff card-icon"></i> Conversão boleto</div>
-  <div class="card-value">0%</div>
+  <div class="label">🚫 Chargeback</div>
+  <div class="value">0%</div>
 </div>
 
 <div class="card">
-  <div class="card-title"><i class="bi bi-hash card-icon"></i> Boletos gerados</div>
-  <div class="card-value">0</div>
+  <div class="label">🏷️ Conversão boleto</div>
+  <div class="value">0%</div>
 </div>
 
+<div class="card">
+  <div class="label"># Boletos gerados</div>
+  <div class="value">0</div>
+</div>
+
+  </div>  <div class="chat-button">
+    <img src="https://cdn-icons-png.flaticon.com/512/726/726623.png" alt="chat">
   </div>  <script>
-    const ctx = document.getElementById('lineChart').getContext('2d');
+    const ctx = document.getElementById('chart').getContext('2d');
     new Chart(ctx, {
       type: 'line',
       data: {
-        labels: ['00:00', '06:00', '12:00', '18:00', '23:59'],
+        labels: Array(24).fill(''),
         datasets: [{
-          label: 'Vendas',
-          data: [0, 0, 0, 0, 0],
-          borderColor: '#4f46e5',
-          tension: 0.3,
+          data: Array(24).fill(0),
+          borderColor: '#6366f1',
+          borderWidth: 2,
           fill: false,
+          tension: 0.4
         }]
       },
       options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false }
-        },
+        plugins: { legend: { display: false } },
         scales: {
-          x: {
-            grid: { display: false }
-          },
-          y: {
-            beginAtZero: true,
-            grid: { display: false }
-          }
+          x: { display: false },
+          y: { display: false }
         }
       }
     });
