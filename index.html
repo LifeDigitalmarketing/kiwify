@@ -1,193 +1,180 @@
 <!DOCTYPE html><html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Kiwify Fake</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kiwify - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
       font-family: 'Inter', sans-serif;
-      background-color: #f6f7fb;
-    }header {
-  background-color: #0b8f3f;
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: white;
-}
-
-.progress-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.progress-bar {
-  background: white;
-  border-radius: 9999px;
-  height: 8px;
-  width: 100px;
-  position: relative;
-}
-
-.progress-bar::before {
-  content: '';
-  background: #0b8f3f;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 0%;
-  border-radius: 9999px;
-}
-
-.dashboard {
-  padding: 16px;
-}
-
-.dropdown {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  background: white;
-}
-
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-  box-shadow: 0 0 0 1px #e2e8f0;
-}
-
-.label {
-  color: #64748b;
-  font-size: 14px;
-}
-
-.value {
-  font-size: 20px;
-  color: #0f172a;
-  font-weight: 400;
-}
-
-.icon {
-  font-size: 18px;
-  margin-right: 6px;
-  vertical-align: middle;
-}
-
-.chat-button {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  background: black;
-  border-radius: 999px;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.chat-button img {
-  width: 24px;
-  height: 24px;
-}
-
+      background-color: #f9fafb;
+      color: #111827;
+      display: flex;
+    }
+    .sidebar {
+      width: 240px;
+      background-color: #1f2937;
+      color: white;
+      height: 100vh;
+      padding: 1rem;
+    }
+    .sidebar h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+    }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 0.5rem;
+    }
+    .nav-link:hover {
+      background-color: #374151;
+    }
+    .nav-link img {
+      width: 20px;
+      height: 20px;
+    }
+    .main {
+      flex: 1;
+      padding: 2rem;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .header .profile {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .header .profile img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    .card h3 {
+      font-size: 1rem;
+      color: #6b7280;
+      margin-bottom: 0.5rem;
+    }
+    .card p {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #111827;
+    }
+    .chart-container {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    canvas {
+      width: 100% !important;
+      max-width: 100%;
+      height: auto !important;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div></div>
-    <div class="progress-container">
-      <div class="progress-bar"></div>
-      <div style="font-size:14px; font-weight:500">R$ 0K / R$ 10K</div>
+  <aside class="sidebar">
+    <h2>Kiwify</h2>
+    <div class="nav-link">
+      <img src="icons/home.png" alt="Ícone Início" />
+      Início
     </div>
-    <div style="width:32px; height:32px; border-radius:50%; background:#ddd"></div>
-  </header>  <div class="dashboard">
-    <select class="dropdown">
-      <option>Hoje</option>
-    </select>
-    <select class="dropdown">
-      <option>Todos os produtos</option>
-    </select>
-    <select class="dropdown">
-      <option>Todas as moedas</option>
-    </select><div class="card">
-  <div class="label"><span class="icon">💲</span>Valor líquido</div>
-  <div class="value">R$ 0,00</div>
-</div>
-
-<div class="card">
-  <div class="label"><span class="icon">📈</span>Vendas</div>
-  <div class="value">0</div>
-</div>
-
-<div class="card">
-  <canvas id="chart" height="100"></canvas>
-  <div style="display:flex; justify-content: space-between; font-size: 12px; color: #64748b; margin-top:4px">
-    <div>Hoje, 0:00</div>
-    <div>Hoje, 23:59</div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="label">💳 Aprovação cartão</div>
-  <div class="value">0%</div>
-</div>
-
-<div class="card">
-  <div class="label">🌐 Vendas 1-click da rede Kiwify <span title="Info">❔</span></div>
-  <div class="value">R$ 0,00 <span style="font-size:14px">0%</span></div>
-</div>
-
-<div class="card">
-  <div class="label">📦 Reembolso</div>
-  <div class="value">0%</div>
-</div>
-
-<div class="card">
-  <div class="label">🚫 Chargeback</div>
-  <div class="value">0%</div>
-</div>
-
-<div class="card">
-  <div class="label">🏷️ Conversão boleto</div>
-  <div class="value">0%</div>
-</div>
-
-<div class="card">
-  <div class="label"># Boletos gerados</div>
-  <div class="value">0</div>
-</div>
-
-  </div>  <div class="chat-button">
-    <img src="https://cdn-icons-png.flaticon.com/512/726/726623.png" alt="chat">
-  </div>  <script>
-    const ctx = document.getElementById('chart').getContext('2d');
-    new Chart(ctx, {
+    <div class="nav-link">
+      <img src="icons/sales.png" alt="Ícone Vendas" />
+      Vendas
+    </div>
+    <div class="nav-link">
+      <img src="icons/products.png" alt="Ícone Produtos" />
+      Produtos
+    </div>
+    <div class="nav-link">
+      <img src="icons/affiliates.png" alt="Ícone Afiliados" />
+      Afiliados
+    </div>
+    <div class="nav-link">
+      <img src="icons/settings.png" alt="Ícone Configurações" />
+      Configurações
+    </div>
+  </aside>
+  <main class="main">
+    <div class="header">
+      <h1>Visão geral</h1>
+      <div class="profile">
+        <span>João Silva</span>
+        <img src="icons/profile.jpg" alt="Foto de perfil" />
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <h3>Receita de hoje</h3>
+        <p>R$ 1.240,00</p>
+      </div>
+      <div class="card">
+        <h3>Pedidos</h3>
+        <p>52</p>
+      </div>
+      <div class="card">
+        <h3>Taxa de conversão</h3>
+        <p>12,5%</p>
+      </div>
+    </div>
+    <div class="chart-container">
+      <h3 style="margin-bottom: 1rem; color: #374151">Gráfico de vendas</h3>
+      <canvas id="salesChart"></canvas>
+    </div>
+  </main>  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  <script>
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    const salesChart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: Array(24).fill(''),
+        labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
         datasets: [{
-          data: Array(24).fill(0),
-          borderColor: '#6366f1',
+          label: 'Vendas da semana',
+          data: [120, 190, 300, 250, 220, 170, 90],
+          backgroundColor: 'rgba(99, 102, 241, 0.2)',
+          borderColor: 'rgba(99, 102, 241, 1)',
           borderWidth: 2,
-          fill: false,
+          fill: true,
           tension: 0.4
         }]
       },
       options: {
-        plugins: { legend: { display: false } },
         scales: {
-          x: { display: false },
-          y: { display: false }
+          y: {
+            beginAtZero: true
+          }
         }
       }
     });
