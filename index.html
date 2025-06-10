@@ -1,158 +1,263 @@
-<!DOCTYPE html><html lang="pt-br">
+<!DOCTYPE html><html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Kiwify Fake</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script src="https://kit.fontawesome.com/a2d9d6c36b.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     * {
-      margin: 0;
-      padding: 0;
       box-sizing: border-box;
       font-family: 'Inter', sans-serif;
-    }
-    body {
-      background-color: #f5f6fa;
-    }
-    header {
-      background-color: #00793f;
-      color: white;
-      padding: 12px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .menu-icon {
-      font-size: 24px;
-      background-color: rgba(0,0,0,0.1);
-      padding: 8px;
-      border-radius: 50%;
-    }
-    .balance-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .balance-bar span {
-      font-weight: 600;
-    }
-    .balance-track {
-      background: #ffffff;
-      border-radius: 20px;
-      height: 8px;
-      width: 100px;
-      position: relative;
-    }
-    .balance-fill {
-      background: #00ffae;
-      height: 8px;
-      border-radius: 20px;
-      width: 0%;
-    }
-    .profile-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #ccc;
-    }
-    .container {
-      padding: 16px;
-    }
-    .title {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 16px;
-    }
-    .filters select {
-      width: 100%;
-      margin-bottom: 12px;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      background-color: white;
-    }
-    .card {
-      background: white;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      margin-bottom: 12px;
-    }
-    .card .label {
-      font-size: 14px;
-      color: #777;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .card .value {
-      font-size: 18px;
-      font-weight: 600;
-    }
-    .icon {
-      font-size: 16px;
-    }
+      margin: 0;
+      padding: 0;
+    }body {
+  background-color: #f9fafb;
+  color: #1f2937;
+}
+
+.header {
+  background-color: #047857;
+  color: white;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-button {
+  width: 36px;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-button div {
+  width: 16px;
+  height: 2px;
+  background-color: white;
+  position: relative;
+}
+
+.menu-button div::before,
+.menu-button div::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 2px;
+  background-color: white;
+  left: 0;
+}
+
+.menu-button div::before {
+  top: -6px;
+}
+
+.menu-button div::after {
+  top: 6px;
+}
+
+.progress-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-bar {
+  height: 8px;
+  width: 100px;
+  background-color: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  background-color: #10b981;
+  width: 0%;
+  height: 100%;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  background-color: #d1d5db;
+  border-radius: 50%;
+}
+
+.container {
+  padding: 16px;
+}
+
+h2 {
+  font-weight: 600;
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.card {
+  background-color: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  margin-bottom: 12px;
+}
+
+.card .title {
+  font-size: 14px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card .value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin-top: 4px;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+#chartContainer {
+  background-color: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
   </style>
 </head>
 <body>
-  <header>
-    <i class="fas fa-bars menu-icon"></i>
-    <div class="balance-bar">
-      <i class="fas fa-gem"></i>
-      <div class="balance-track">
-        <div class="balance-fill"></div>
-      </div>
-      <span>R$ 0K / R$ 10K</span>
+  <div class="header">
+    <div class="menu-button">
+      <div></div>
     </div>
-    <div class="profile-icon"></div>
-  </header>  <div class="container">
-    <div class="title">Dashboard</div>
-    <div class="filters">
-      <select><option>Hoje</option></select>
-      <select><option>Todos os produtos</option></select>
-      <select><option>Todas as moedas</option></select>
-    </div><div class="card">
-  <div class="label"><i class="fas fa-dollar-sign icon"></i> Valor líquido</div>
+    <div class="progress-bar-container">
+      <div class="progress-bar">
+        <div class="progress-bar-fill"></div>
+      </div>
+      <strong>R$ 0K / R$ 10K</strong>
+    </div>
+    <div class="user-avatar"></div>
+  </div>  <div class="container">
+    <h2>Dashboard</h2>
+    <select>
+      <option>Hoje</option>
+    </select>
+    <select>
+      <option>Todos os produtos</option>
+    </select>
+    <select>
+      <option>Todas as moedas</option>
+    </select><div class="card">
+  <div class="title">
+    <img src="https://img.icons8.com/ios-filled/50/000000/us-dollar-circled--v1.png" class="icon" alt="selo">
+    Valor líquido
+  </div>
   <div class="value">R$ 0,00</div>
 </div>
 
 <div class="card">
-  <div class="label"><i class="fas fa-chart-line icon"></i> Vendas</div>
-  <div class="value">0</div>
-</div>
-
-<div class="card">
-  <div class="label"><i class="fas fa-credit-card icon"></i> Aprovação cartão</div>
-  <div class="value">0%</div>
-</div>
-
-<div class="card">
-  <div class="label"><i class="fas fa-globe icon"></i> Vendas 1-click da rede Kiwify</div>
-  <div class="value">R$ 0,00 <span style="font-weight: normal; font-size: 14px;">0%</span></div>
-</div>
-
-<div class="card">
-  <div class="label"><i class="fas fa-undo icon"></i> Reembolso</div>
-  <div class="value">0%</div>
-</div>
-
-<div class="card">
-  <div class="label"><i class="fas fa-ban icon"></i> Chargeback</div>
-  <div class="value">0%</div>
-</div>
-
-<div class="card">
-  <div class="label"><i class="fas fa-receipt icon"></i> Conversão boleto</div>
-  <div class="value">0%</div>
-</div>
-
-<div class="card">
-  <div class="label"><i class="fas fa-hashtag icon"></i> Boletos gerados</div>
-  <div class="value">0</div>
-</div>
-
+  <div class="title">
+    <img src="https://img.icons8.com/ios/50/000000/combo-chart--v1.png" class="icon" alt="gráfico">
+    Vendas
   </div>
-</body>
+  <div class="value">0</div>
+</div>
+
+<div id="chartContainer">
+  <canvas id="salesChart"></canvas>
+</div>
+
+<div class="card">
+  <div class="title">
+    <img src="https://img.icons8.com/ios-filled/50/000000/bank-card-back-side.png" class="icon" alt="selo">
+    Aprovação cartão
+  </div>
+  <div class="value">0%</div>
+</div>
+
+<div class="card">
+  <div class="title">
+    <img src="https://img.icons8.com/ios-filled/50/000000/network.png" class="icon" alt="selo">
+    Vendas 1-click da rede Kiwify
+  </div>
+  <div class="value">R$ 0,00 &nbsp; 0%</div>
+</div>
+
+<div class="card">
+  <div class="title">
+    <img src="https://img.icons8.com/ios-filled/50/000000/refund.png" class="icon" alt="selo">
+    Reembolso
+  </div>
+  <div class="value">0%</div>
+</div>
+
+<div class="card">
+  <div class="title">
+    <img src="https://img.icons8.com/ios-filled/50/000000/delete-sign.png" class="icon" alt="selo">
+    Chargeback
+  </div>
+  <div class="value">0%</div>
+</div>
+
+<div class="card">
+  <div class="title">
+    <img src="https://img.icons8.com/ios-filled/50/000000/money.png" class="icon" alt="selo">
+    Conversão boleto
+  </div>
+  <div class="value">0%</div>
+</div>
+
+<div class="card">
+  <div class="title">
+    <img src="https://img.icons8.com/ios-filled/50/000000/tags.png" class="icon" alt="selo">
+    Boletos gerados
+  </div>
+  <div class="value">0</div>
+</div>
+
+  </div>  <script>
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    const salesChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Hoje, 0:00', '', '', '', '', '', 'Hoje, 23:59'],
+        datasets: [{
+          label: 'R$ 0',
+          data: [0, 0, 0, 0, 0, 0, 0],
+          borderColor: '#6366f1',
+          backgroundColor: 'transparent',
+          tension: 0.3,
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+  </script></body>
 </html>
