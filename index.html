@@ -65,6 +65,7 @@
       width: 1px;
       height: 100%;
       top: 0;
+      transform: translateX(-0.5px); /* Alinha perfeitamente no centro do triângulo */
       background: repeating-linear-gradient(
         to top,
         #cbd5e0,
@@ -134,7 +135,8 @@
           borderColor: '#3b82f6',
           borderWidth: 2,
           fill: false,
-          pointRadius: 0,
+          pointRadius: 0,          // Remove bolinhas
+          pointStyle: 'line',      // Remove estilos extras
           tension: 0
         }]
       },
@@ -152,18 +154,16 @@
               const value = context.chart.data.datasets[0].data[index];
               const label = context.chart.data.labels[index];
 
-              const canvasRect = canvas.getBoundingClientRect();
-              const chartArea = context.chart.chartArea;
               const caretX = tooltipModel.caretX;
               const caretY = tooltipModel.caretY;
 
-              // Tooltip ao lado
+              // Tooltip ao lado da linha
               tooltip.innerHTML = `<strong>${label}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: ${value > 0 ? 1 : 0}`;
               tooltip.style.left = `${caretX + 15}px`;
               tooltip.style.top = `${caretY - 40}px`;
               tooltip.style.display = 'block';
 
-              // Linha pontilhada
+              // Linha pontilhada centralizada
               vline.style.left = `${caretX}px`;
               vline.style.display = 'block';
 
@@ -199,7 +199,6 @@
       }
     });
 
-    // Oculta ao sair
     chartCard.addEventListener('mouseleave', () => {
       tooltip.style.display = 'none';
       vline.style.display = 'none';
