@@ -1,39 +1,43 @@
-<!DOCTYPE html><html lang="pt-BR">
+<!DOCTYPE html><html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard</title>
+  <title>Dashboard Kiwify Clone</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f5f6fa;
       margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f5f7;
     }
     .dashboard {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 1rem;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+    h1 {
+      font-size: 24px;
+      color: #1e1e1e;
     }
     .card {
       background: white;
       border-radius: 10px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
-    .card-title {
+    .card p {
       font-size: 14px;
-      color: #666;
-      margin-bottom: 4px;
+      color: #8a8a8a;
+      margin: 0 0 4px;
     }
-    .card-value {
-      font-size: 18px;
-      font-weight: bold;
+    .card h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #1e1e1e;
     }
-    .chart-container {
+    .chart-card {
       position: relative;
-      height: 200px;
+      height: 250px;
     }
     canvas {
       width: 100% !important;
@@ -42,53 +46,72 @@
     .tooltip {
       position: absolute;
       background: white;
-      border-radius: 6px;
       padding: 8px 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      font-size: 13px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      font-size: 14px;
       pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s ease;
+      transform: translateX(10px);
+      white-space: nowrap;
+      z-index: 10;
+      transition: all 0.1s ease;
+      display: none;
     }
-    .custom-marker {
+    .vertical-line {
+      position: absolute;
+      width: 1px;
+      top: 0;
+      bottom: 100%;
+      background: repeating-linear-gradient(
+        to top,
+        #cbd5e0,
+        #cbd5e0 6px,
+        transparent 6px,
+        transparent 12px
+      );
+      z-index: 5;
+      display: none;
+    }
+    .triangle {
       width: 0;
       height: 0;
       border-left: 6px solid transparent;
       border-right: 6px solid transparent;
       border-top: 10px solid #3b82f6;
       position: absolute;
-      transform: translate(-50%, -100%);
+      transform: translateX(-50%);
+      display: none;
+      z-index: 6;
     }
   </style>
 </head>
 <body>
   <div class="dashboard">
-    <h2>Dashboard</h2><div class="card">
-  <div class="card-title">Valor líquido</div>
-  <div class="card-value">R$ 13,49</div>
-</div>
-
-<div class="card">
-  <div class="card-title">Vendas</div>
-  <div class="card-value">1</div>
-</div>
-
-<div class="card">
-  <div class="chart-container">
-    <canvas id="chart"></canvas>
-    <div id="tooltip" class="tooltip"></div>
-    <div id="marker" class="custom-marker" style="display: none;"></div>
-  </div>
-  <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: #555;">
-    <span>Hoje, 0:00</span>
-    <span>Hoje, 23:59</span>
-  </div>
-</div>
-
+    <h1>Dashboard</h1>
+    <div class="card">
+      <p>Valor líquido</p>
+      <h2>R$ 13,49</h2>
+    </div>
+    <div class="card">
+      <p>Vendas</p>
+      <h2>1</h2>
+    </div>
+    <div class="card chart-card">
+      <canvas id="salesChart"></canvas>
+      <div id="tooltip" class="tooltip"></div>
+      <div id="vline" class="vertical-line"></div>
+      <div id="triangle" class="triangle"></div>
+    </div>
+    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: #555;">
+      <span>Hoje, 0:00</span>
+      <span>Hoje, 23:59</span>
+    </div>
   </div>  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  <script>
-    const ctx = document.getElementById('chart').getContext('2d');
+    const ctx = document.getElementById('salesChart').getContext('2d');
     const tooltip = document.getElementById('tooltip');
-    const marker = document.getElementById('marker');
+    const vline = document.getElementById('vline');
+    const triangle = document.getElementById('triangle');
+    const canvas = document.getElementById('salesChart');
 
     const chart = new Chart(ctx, {
       type: 'line',
@@ -101,7 +124,7 @@
           borderWidth: 2,
           fill: false,
           pointRadius: 0,
-          tension: 0,
+          tension: 0
         }]
       },
       options: {
@@ -110,58 +133,67 @@
           legend: { display: false },
           tooltip: {
             enabled: false,
-            external: function(context) {
+            external: context => {
               const tooltipModel = context.tooltip;
-              const chartArea = context.chart.chartArea;
-              if (tooltipModel.opacity === 0) {
-                tooltip.style.opacity = 0;
-                marker.style.display = 'none';
+              if (!tooltipModel || tooltipModel.opacity === 0) {
+                tooltip.style.display = 'none';
+                vline.style.display = 'none';
+                triangle.style.display = 'none';
                 return;
               }
 
+              const chartRect = canvas.getBoundingClientRect();
               const index = tooltipModel.dataPoints[0].dataIndex;
-              const label = context.chart.data.labels[index];
               const value = context.chart.data.datasets[0].data[index];
+              const label = context.chart.data.labels[index];
+              const x = tooltipModel.caretX;
+              const y = tooltipModel.caretY;
 
-              tooltip.innerHTML = `<b>${label}</b><br>R$ ${value.toFixed(2)}<br>Vendas: ${value > 0 ? 1 : 0}`;
-              const canvasRect = ctx.canvas.getBoundingClientRect();
-              const tooltipX = canvasRect.left + tooltipModel.caretX + 16;
-              const tooltipY = canvasRect.top + tooltipModel.caretY - 60;
-              tooltip.style.opacity = 1;
-              tooltip.style.left = tooltipX + 'px';
-              tooltip.style.top = tooltipY + 'px';
+              tooltip.innerHTML = `<strong>${label}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: ${value > 0 ? 1 : 0}`;
+              tooltip.style.left = `${x + 20}px`;
+              tooltip.style.top = `${y + 20}px`;
+              tooltip.style.position = 'absolute';
+              tooltip.style.display = 'block';
 
-              marker.style.left = canvasRect.left + tooltipModel.caretX + 'px';
-              marker.style.top = canvasRect.top + tooltipModel.caretY + 'px';
-              marker.style.display = 'block';
-            }
-          }
-        },
-        scales: {
-          x: {
-            grid: { display: false },
-            ticks: {
-              callback: function(value, index) {
-                if (index === 0) return 'Hoje, 0:00';
-                if (index === 7) return 'Hoje, 23:59';
-                return '';
-              },
-              color: '#555'
-            }
-          },
-          y: {
-            grid: { drawBorder: false, color: '#eee' },
-            ticks: {
-              callback: function(value) {
-                return value === 0 ? 'R$ 0' : '';
-              },
-              color: '#555'
+              vline.style.left = `${x}px`;
+              vline.style.height = `${y}px`;
+              vline.style.display = 'block';
+
+              triangle.style.left = `${x}px`;
+              triangle.style.top = `${y - 10}px`;
+              triangle.style.display = 'block';
             }
           }
         },
         interaction: {
           mode: 'index',
-          intersect: false,
+          intersect: false
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              callback: (value, index) => {
+                if (index === 0) return 'Hoje, 0:00';
+                if (index === 7) return 'Hoje, 23:59';
+                return '';
+              },
+              color: '#555',
+              font: { size: 12 }
+            }
+          },
+          y: {
+            grid: {
+              drawBorder: false,
+              drawTicks: false,
+              color: '#e5e7eb'
+            },
+            ticks: {
+              callback: val => `R$ ${val}`,
+              color: '#555',
+              font: { size: 12 }
+            }
+          }
         }
       }
     });
