@@ -60,7 +60,7 @@
       position: absolute;
       width: 1px;
       top: 0;
-      bottom: 0;
+      height: 100%;
       background: repeating-linear-gradient(
         to top,
         #cbd5e0,
@@ -95,7 +95,7 @@
       <p>Vendas</p>
       <h2>1</h2>
     </div>
-    <div class="card chart-card">
+    <div class="card chart-card" id="chartCard">
       <canvas id="salesChart"></canvas>
       <div id="tooltip" class="tooltip"></div>
       <div id="vline" class="vertical-line"></div>
@@ -111,6 +111,7 @@
     const vline = document.getElementById('vline');
     const triangle = document.getElementById('triangle');
     const canvas = document.getElementById('salesChart');
+    const chartCard = document.getElementById('chartCard');
 
     const chart = new Chart(ctx, {
       type: 'line',
@@ -134,12 +135,7 @@
             enabled: false,
             external: context => {
               const tooltipModel = context.tooltip;
-              if (!tooltipModel || tooltipModel.opacity === 0) {
-                tooltip.style.display = 'none';
-                vline.style.display = 'none';
-                triangle.style.display = 'none';
-                return;
-              }
+              if (!tooltipModel || tooltipModel.opacity === 0) return;
 
               const chartRect = canvas.getBoundingClientRect();
               const index = tooltipModel.dataPoints[0].dataIndex;
@@ -151,15 +147,13 @@
               tooltip.innerHTML = `<strong>${label}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: ${value > 0 ? 1 : 0}`;
               tooltip.style.left = `${x + 20}px`;
               tooltip.style.top = `${y - 40}px`;
-              tooltip.style.position = 'absolute';
               tooltip.style.display = 'block';
 
               vline.style.left = `${x}px`;
-              vline.style.height = `${canvas.offsetHeight}px`;
               vline.style.display = 'block';
 
               triangle.style.left = `${x}px`;
-              triangle.style.top = `${y - 10}px`;
+              triangle.style.top = `${canvas.offsetTop + y - 10}px`;
               triangle.style.display = 'block';
             }
           }
@@ -182,17 +176,17 @@
             }
           },
           y: {
-            grid: {
-              drawBorder: false,
-              drawTicks: false,
-              display: false
-            },
-            ticks: {
-              display: false
-            }
+            grid: { drawBorder: false, drawTicks: false, display: false },
+            ticks: { display: false }
           }
         }
       }
+    });
+
+    chartCard.addEventListener('mouseleave', () => {
+      tooltip.style.display = 'none';
+      vline.style.display = 'none';
+      triangle.style.display = 'none';
     });
   </script></body>
 </html>
