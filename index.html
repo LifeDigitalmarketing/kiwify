@@ -98,10 +98,15 @@
     const chart = new Chart(canvas.getContext('2d'), {
       type: 'line',
       data: {
-        labels: ['Hoje, 0:00', '3:00', '6:00', '9:00', '12:00', '15:00', '18:00', 'Hoje, 23:59'],
+        labels: [
+          '00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
+          '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
+          '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
+          '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '23:59'
+        ],
         datasets: [{
           label: 'Vendas',
-          data: [0, 13.49, 0, 0, 0, 0, 0, 0],
+          data: [0, 0, 0, 13.49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           borderColor: '#3b82f6',
           borderWidth: 2,
           fill: false,
@@ -133,7 +138,6 @@
               tooltip.style.top = `${caretY - 40}px`;
               tooltip.style.display = 'block';
 
-              // Alinhamento fino da linha vertical com o centro do ponto
               vline.style.left = `${caretX - 0.5}px`;
               vline.style.display = 'block';
             }
@@ -147,10 +151,11 @@
           x: {
             grid: { display: false },
             ticks: {
-              callback: (value, index) => {
-                if (index === 0) return 'Hoje, 0:00';
-                if (index === 7) return 'Hoje, 23:59';
-                return '';
+              maxTicksLimit: 24,
+              autoSkip: false,
+              callback: (val, index, values) => {
+                const hour = values[index].label;
+                return hour;
               },
               color: '#555',
               font: { size: 12 }
