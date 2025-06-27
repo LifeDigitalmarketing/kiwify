@@ -3,87 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard - Kiwify Clone</title>
+  <title>Kiwify - Dashboard</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <header>
-    <div class="top-bar">
-      <div class="menu-icon">☰</div>
+  <header class="top-header">
+    <div class="menu-icon">☰</div>
+    <div class="progress-container">
+      <span class="progress-text">R$ 0K / R$ 10K</span>
       <div class="progress-bar">
-        <div class="progress"></div>
+        <div class="progress-bar-fill"></div>
       </div>
-      <div class="profile-icon"></div>
     </div>
+    <div class="profile-circle"></div>
   </header>
 
-  <main>
+  <main class="main-content">
     <h1>Dashboard</h1>
 
     <div class="filters">
       <select>
         <option>Hoje</option>
-        <option>Ontem</option>
         <option>15 Ago</option>
       </select>
-
       <select>
         <option>Todos os produtos</option>
       </select>
-
       <select>
         <option>Todas as moedas</option>
       </select>
     </div>
 
-    <section class="cards">
+    <section class="dashboard-cards">
       <div class="card">
-        <span class="label">Valor líquido</span>
-        <span class="value">R$ 13,49</span>
+        <p class="card-label">Valor líquido</p>
+        <p class="card-value">R$ 13,49</p>
       </div>
 
       <div class="card">
-        <span class="label">Vendas</span>
-        <span class="value">1</span>
+        <p class="card-label">Vendas</p>
+        <p class="card-value">1</p>
       </div>
 
       <div class="card chart-card">
-        <canvas id="salesChart"></canvas>
+        <canvas id="salesChart" width="100%" height="120"></canvas>
       </div>
 
       <div class="card">
-        <span class="label">Aprovação cartão</span>
-        <span class="value">0%</span>
+        <p class="card-label">Aprovação cartão</p>
+        <p class="card-value">0%</p>
       </div>
 
       <div class="card">
-        <span class="label">Vendas 1-click da rede Kiwify</span>
-        <span class="value">R$ 0,00 — 0%</span>
+        <p class="card-label">Vendas 1-click da rede Kiwify</p>
+        <p class="card-value">R$ 0,00 – 0%</p>
       </div>
 
       <div class="card">
-        <span class="label">Reembolso</span>
-        <span class="value">0%</span>
+        <p class="card-label">Reembolso</p>
+        <p class="card-value">0%</p>
       </div>
 
       <div class="card">
-        <span class="label">Chargeback</span>
-        <span class="value">0%</span>
+        <p class="card-label">Chargeback</p>
+        <p class="card-value">0%</p>
       </div>
 
       <div class="card">
-        <span class="label">Conversão boleto</span>
-        <span class="value">0%</span>
+        <p class="card-label">Conversão boleto</p>
+        <p class="card-value">0%</p>
       </div>
 
       <div class="card">
-        <span class="label">Boletos gerados</span>
-        <span class="value">0</span>
+        <p class="card-label">Boletos gerados</p>
+        <p class="card-value">0</p>
       </div>
     </section>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <div class="chat-icon">💬</div>
+
   <script src="script.js"></script>
 </body>
 </html>
