@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<!DOCTYPE html><html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,18 +9,15 @@
       font-family: 'Segoe UI', sans-serif;
       background: #f4f5f7;
     }
-
     .dashboard {
       max-width: 600px;
       margin: 40px auto;
       padding: 0 16px;
     }
-
     h1 {
       font-size: 24px;
       color: #1e1e1e;
     }
-
     .card {
       background: white;
       border-radius: 10px;
@@ -29,29 +25,24 @@
       margin-bottom: 12px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
-
     .card p {
       font-size: 14px;
       color: #8a8a8a;
       margin: 0 0 4px;
     }
-
     .card h2 {
       margin: 0;
       font-size: 20px;
       color: #1e1e1e;
     }
-
     .chart-card {
       position: relative;
       height: 250px;
     }
-
     canvas {
       width: 100% !important;
       height: 100% !important;
     }
-
     .tooltip {
       position: absolute;
       background: white;
@@ -62,14 +53,14 @@
       pointer-events: none;
       white-space: nowrap;
       z-index: 10;
+      transition: all 0.1s ease;
       display: none;
     }
-
     .vertical-line {
       position: absolute;
       width: 1px;
-      top: 0;
       height: 100%;
+      top: 0;
       background: repeating-linear-gradient(
         to top,
         #cbd5e0,
@@ -80,7 +71,6 @@
       z-index: 5;
       display: none;
     }
-
     .triangle {
       width: 0;
       height: 0;
@@ -88,7 +78,7 @@
       border-right: 6px solid transparent;
       border-top: 10px solid #3b82f6;
       position: absolute;
-      transform: translateX(-50%);
+      transform: translate(-50%, 0);
       display: none;
       z-index: 6;
     }
@@ -97,40 +87,32 @@
 <body>
   <div class="dashboard">
     <h1>Dashboard</h1>
-
     <div class="card">
       <p>Valor líquido</p>
       <h2>R$ 13,49</h2>
     </div>
-
     <div class="card">
       <p>Vendas</p>
       <h2>1</h2>
     </div>
-
     <div class="card chart-card" id="chartCard">
       <canvas id="salesChart"></canvas>
       <div id="tooltip" class="tooltip"></div>
       <div id="vline" class="vertical-line"></div>
       <div id="triangle" class="triangle"></div>
     </div>
-
     <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: #555;">
       <span>Hoje, 0:00</span>
       <span>Hoje, 23:59</span>
     </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const ctx = document.getElementById('salesChart').getContext('2d');
+  </div>  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  <script>
     const canvas = document.getElementById('salesChart');
     const tooltip = document.getElementById('tooltip');
     const vline = document.getElementById('vline');
     const triangle = document.getElementById('triangle');
     const chartCard = document.getElementById('chartCard');
 
-    const chart = new Chart(ctx, {
+    const chart = new Chart(canvas.getContext('2d'), {
       type: 'line',
       data: {
         labels: ['Hoje, 0:00', '3:00', '6:00', '9:00', '12:00', '15:00', '18:00', 'Hoje, 23:59'],
@@ -152,27 +134,25 @@
             enabled: false,
             external: context => {
               const tooltipModel = context.tooltip;
-
               if (!tooltipModel || tooltipModel.opacity === 0) return;
 
               const chartRect = canvas.getBoundingClientRect();
+              const x = tooltipModel.caretX;
+              const y = tooltipModel.caretY;
               const index = tooltipModel.dataPoints[0].dataIndex;
               const value = context.chart.data.datasets[0].data[index];
               const label = context.chart.data.labels[index];
 
-              const x = chartRect.left + window.pageXOffset + tooltipModel.caretX;
-              const y = chartRect.top + window.pageYOffset + tooltipModel.caretY;
-
               tooltip.innerHTML = `<strong>${label}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: ${value > 0 ? 1 : 0}`;
-              tooltip.style.left = `${x + 10}px`;
-              tooltip.style.top = `${y - 40}px`;
+              tooltip.style.left = `${chartRect.left + x + 12}px`;
+              tooltip.style.top = `${chartRect.top + y - 40}px`;
               tooltip.style.display = 'block';
 
-              vline.style.left = `${tooltipModel.caretX}px`;
+              vline.style.left = `${x}px`;
               vline.style.display = 'block';
 
-              triangle.style.left = `${tooltipModel.caretX}px`;
-              triangle.style.top = `${tooltipModel.caretY - 10}px`;
+              triangle.style.left = `${x}px`;
+              triangle.style.top = `${y - 10}px`;
               triangle.style.display = 'block';
             }
           }
@@ -202,12 +182,10 @@
       }
     });
 
-    // Ocultar elementos ao sair com o mouse ou dedo
     chartCard.addEventListener('mouseleave', () => {
       tooltip.style.display = 'none';
       vline.style.display = 'none';
       triangle.style.display = 'none';
     });
-  </script>
-</body>
+  </script></body>
 </html>
