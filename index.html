@@ -1,5 +1,4 @@
-<!DOCTYPE html><html lang="pt-br">
-<head>
+<!DOCTYPE html><html lang="pt-br"><head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Kiwify Clone - Sem Triângulo Extra</title>
@@ -56,7 +55,6 @@
       width: 1px;
       height: 100%;
       top: 0;
-      transform: translateX(-0.5px);
       background: repeating-linear-gradient(
         to top,
         #cbd5e0,
@@ -67,27 +65,15 @@
       z-index: 5;
       display: none;
     }
-    .triangle {
-      width: 0;
-      height: 0;
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-top: 10px solid #3b82f6;
-      position: absolute;
-      transform: translateX(-50%);
-      display: none;
-      z-index: 6;
-    }
   </style>
 </head>
 <body>
   <div class="dashboard">
-    <h1 style="font-size: 24px;">Dashboard</h1><div class="card">
-  <p>Valor líquido</p>
-  <h2>R$ 13,49</h2>
-</div>
-
-<div class="card">
+    <h1 style="font-size: 24px;">Dashboard</h1>
+    <div class="card">
+      <p>Valor líquido</p>
+      <h2>R$ 13,49</h2>
+    </div><div class="card">
   <p>Vendas</p>
   <h2>1</h2>
 </div>
@@ -107,7 +93,6 @@
     const canvas = document.getElementById('salesChart');
     const tooltip = document.getElementById('tooltip');
     const vline = document.getElementById('vline');
-    const triangle = document.getElementById('triangle');
     const chartCard = document.getElementById('chartCard');
 
     const chart = new Chart(canvas.getContext('2d'), {
@@ -148,12 +133,9 @@
               tooltip.style.top = `${caretY - 40}px`;
               tooltip.style.display = 'block';
 
-              vline.style.left = `${caretX}px`;
+              // Alinhamento fino da linha vertical com o centro do ponto
+              vline.style.left = `${caretX - 0.5}px`;
               vline.style.display = 'block';
-
-              triangle.style.left = `${caretX}px`;
-              triangle.style.top = `${caretY - 10}px`;
-              triangle.style.display = 'block';
             }
           }
         },
@@ -185,7 +167,6 @@
     chartCard.addEventListener('mouseleave', () => {
       tooltip.style.display = 'none';
       vline.style.display = 'none';
-      triangle.style.display = 'none';
     });
   </script></body>
 </html>
