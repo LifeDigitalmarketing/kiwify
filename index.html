@@ -85,7 +85,7 @@ canvas {
           borderColor: '#4a4fff',
           backgroundColor: 'transparent',
           tension: 0.3,
-          pointRadius: context => context.dataIndex === 1 ? 0 : 0,
+          pointRadius: 0,
           pointHoverRadius: 6,
           pointBackgroundColor: '#4a4fff',
           pointBorderColor: '#ffffff',
@@ -102,6 +102,7 @@ canvas {
         plugins: {
           tooltip: {
             enabled: true,
+            position: 'nearest',
             backgroundColor: '#ffffff',
             borderColor: '#d1d5db',
             borderWidth: 1,
@@ -116,6 +117,11 @@ canvas {
               title: (tooltipItems) => tooltipItems[0].label,
               label: (tooltipItem) => `R$ ${tooltipItem.formattedValue}`,
               afterLabel: (tooltipItem) => `Vendas: ${vendasPorHora[tooltipItem.dataIndex]}`
+            },
+            external: function(context) {
+              const tooltipModel = context.tooltip;
+              if (!tooltipModel.opacity) return;
+              tooltipModel.yAlign = 'top';
             }
           },
           legend: {
@@ -163,15 +169,17 @@ canvas {
             ctx.stroke();
             ctx.restore();
 
-            // Triângulo (indicador da venda)
+            // Triângulo reto estilo Kiwify
             if (salesData[activePoint.index] > 0) {
+              ctx.save();
               ctx.beginPath();
-              ctx.moveTo(x, activePoint.element.y - 10);
-              ctx.lineTo(x - 6, activePoint.element.y);
-              ctx.lineTo(x + 6, activePoint.element.y);
+              ctx.moveTo(x, activePoint.element.y - 8);
+              ctx.lineTo(x - 6, activePoint.element.y + 6);
+              ctx.lineTo(x + 6, activePoint.element.y + 6);
               ctx.closePath();
               ctx.fillStyle = '#4a4fff';
               ctx.fill();
+              ctx.restore();
             }
           }
         }
