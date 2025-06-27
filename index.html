@@ -1,89 +1,172 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kiwify - Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Kiwify Clone</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8fafc;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .dashboard {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .title {
+      font-size: 14px;
+      color: #64748b;
+      margin: 0 0 6px;
+    }
+
+    .value {
+      font-size: 20px;
+      font-weight: bold;
+      color: #0f172a;
+      margin: 0;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+    }
+  </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <header class="top-header">
-    <div class="menu-icon">☰</div>
-    <div class="progress-container">
-      <span class="progress-text">R$ 0K / R$ 10K</span>
-      <div class="progress-bar">
-        <div class="progress-bar-fill"></div>
-      </div>
-    </div>
-    <div class="profile-circle"></div>
-  </header>
-
-  <main class="main-content">
+  <div class="dashboard">
     <h1>Dashboard</h1>
 
-    <div class="filters">
-      <select>
-        <option>Hoje</option>
-        <option>15 Ago</option>
-      </select>
-      <select>
-        <option>Todos os produtos</option>
-      </select>
-      <select>
-        <option>Todas as moedas</option>
-      </select>
+    <div class="card">
+      <p class="title">Valor líquido</p>
+      <p class="value">R$ 13,49</p>
     </div>
 
-    <section class="dashboard-cards">
-      <div class="card">
-        <p class="card-label">Valor líquido</p>
-        <p class="card-value">R$ 13,49</p>
-      </div>
+    <div class="card">
+      <p class="title">Vendas</p>
+      <p class="value">1</p>
+    </div>
 
-      <div class="card">
-        <p class="card-label">Vendas</p>
-        <p class="card-value">1</p>
-      </div>
+    <div class="card">
+      <canvas id="salesChart"></canvas>
+    </div>
 
-      <div class="card chart-card">
-        <canvas id="salesChart" width="100%" height="120"></canvas>
-      </div>
+    <div class="card">
+      <p class="title">Aprovação cartão</p>
+      <p class="value">0%</p>
+    </div>
 
-      <div class="card">
-        <p class="card-label">Aprovação cartão</p>
-        <p class="card-value">0%</p>
-      </div>
+    <div class="card">
+      <p class="title">Vendas 1-click da rede Kiwify</p>
+      <p class="value">R$ 0,00 - 0%</p>
+    </div>
+  </div>
 
-      <div class="card">
-        <p class="card-label">Vendas 1-click da rede Kiwify</p>
-        <p class="card-value">R$ 0,00 – 0%</p>
-      </div>
+  <script>
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    const labels = ['Ago 15, 0:00', 'Ago 15, 3:00', 'Ago 15, 6:00', 'Ago 15, 9:00', 'Ago 15, 12:00', 'Ago 15, 23:59'];
+    const salesData = [0, 13.49, 0, 0, 0, 0];
+    const vendasPorHora = [0, 1, 0, 0, 0, 0];
 
-      <div class="card">
-        <p class="card-label">Reembolso</p>
-        <p class="card-value">0%</p>
-      </div>
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Vendas',
+          data: salesData,
+          borderColor: '#4a4fff',
+          backgroundColor: 'rgba(74, 79, 255, 0.1)',
+          tension: 0.3,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          pointBackgroundColor: '#4a4fff',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 3,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        interaction: {
+          mode: 'index',
+          intersect: false
+        },
+        plugins: {
+          tooltip: {
+            enabled: true,
+            backgroundColor: '#ffffff',
+            borderColor: '#d1d5db',
+            borderWidth: 1,
+            titleColor: '#000',
+            bodyColor: '#4b5563',
+            titleFont: { size: 13, weight: 'bold' },
+            bodyFont: { size: 13 },
+            padding: 12,
+            cornerRadius: 6,
+            displayColors: false,
+            callbacks: {
+              title: (tooltipItems) => tooltipItems[0].label,
+              label: (tooltipItem) => `R$ ${tooltipItem.formattedValue}`,
+              afterLabel: (tooltipItem) => `Vendas: ${vendasPorHora[tooltipItem.dataIndex]}`
+            }
+          },
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: value => `R$ ${value}`
+            },
+            grid: {
+              color: '#f0f0f0'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      },
+      plugins: [{
+        id: 'verticalLinePlugin',
+        afterDraw: (chart) => {
+          if (chart.tooltip?._active?.length) {
+            const ctx = chart.ctx;
+            const activePoint = chart.tooltip._active[0];
+            const x = activePoint.element.x;
+            const topY = chart.chartArea.top;
+            const bottomY = chart.chartArea.bottom;
 
-      <div class="card">
-        <p class="card-label">Chargeback</p>
-        <p class="card-value">0%</p>
-      </div>
-
-      <div class="card">
-        <p class="card-label">Conversão boleto</p>
-        <p class="card-value">0%</p>
-      </div>
-
-      <div class="card">
-        <p class="card-label">Boletos gerados</p>
-        <p class="card-value">0</p>
-      </div>
-    </section>
-  </main>
-
-  <div class="chat-icon">💬</div>
-
-  <script src="script.js"></script>
+            ctx.save();
+            ctx.beginPath();
+            ctx.setLineDash([4, 6]);
+            ctx.moveTo(x, topY);
+            ctx.lineTo(x, bottomY);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = '#d1d5db';
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+      }]
+    });
+  </script>
 </body>
 </html>
