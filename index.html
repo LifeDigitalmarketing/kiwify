@@ -1,182 +1,89 @@
-<!DOCTYPE html><html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kiwify - Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f9fafb;
-      color: #111827;
-      display: flex;
-    }
-    .sidebar {
-      width: 240px;
-      background-color: #1f2937;
-      color: white;
-      height: 100vh;
-      padding: 1rem;
-    }
-    .sidebar h2 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 2rem;
-    }
-    .nav-link {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin-bottom: 0.5rem;
-    }
-    .nav-link:hover {
-      background-color: #374151;
-    }
-    .nav-link img {
-      width: 20px;
-      height: 20px;
-    }
-    .main {
-      flex: 1;
-      padding: 2rem;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-    .header h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-    .header .profile {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .header .profile img {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    .card {
-      background-color: white;
-      padding: 1.5rem;
-      border-radius: 1rem;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    }
-    .card h3 {
-      font-size: 1rem;
-      color: #6b7280;
-      margin-bottom: 0.5rem;
-    }
-    .card p {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #111827;
-    }
-    .chart-container {
-      background-color: white;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    }
-    canvas {
-      width: 100% !important;
-      max-width: 100%;
-      height: auto !important;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Kiwify Clone</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <aside class="sidebar">
-    <h2>Kiwify</h2>
-    <div class="nav-link">
-      <img src="icons/home.png" alt="Ícone Início" />
-      Início
-    </div>
-    <div class="nav-link">
-      <img src="icons/sales.png" alt="Ícone Vendas" />
-      Vendas
-    </div>
-    <div class="nav-link">
-      <img src="icons/products.png" alt="Ícone Produtos" />
-      Produtos
-    </div>
-    <div class="nav-link">
-      <img src="icons/affiliates.png" alt="Ícone Afiliados" />
-      Afiliados
-    </div>
-    <div class="nav-link">
-      <img src="icons/settings.png" alt="Ícone Configurações" />
-      Configurações
-    </div>
-  </aside>
-  <main class="main">
-    <div class="header">
-      <h1>Visão geral</h1>
-      <div class="profile">
-        <span>João Silva</span>
-        <img src="icons/profile.jpg" alt="Foto de perfil" />
+  <header>
+    <div class="top-bar">
+      <div class="menu-icon">☰</div>
+      <div class="progress-bar">
+        <div class="progress"></div>
       </div>
+      <div class="profile-icon"></div>
     </div>
-    <div class="cards">
+  </header>
+
+  <main>
+    <h1>Dashboard</h1>
+
+    <div class="filters">
+      <select>
+        <option>Hoje</option>
+        <option>Ontem</option>
+        <option>15 Ago</option>
+      </select>
+
+      <select>
+        <option>Todos os produtos</option>
+      </select>
+
+      <select>
+        <option>Todas as moedas</option>
+      </select>
+    </div>
+
+    <section class="cards">
       <div class="card">
-        <h3>Receita de hoje</h3>
-        <p>R$ 1.240,00</p>
+        <span class="label">Valor líquido</span>
+        <span class="value">R$ 13,49</span>
       </div>
+
       <div class="card">
-        <h3>Pedidos</h3>
-        <p>52</p>
+        <span class="label">Vendas</span>
+        <span class="value">1</span>
       </div>
+
+      <div class="card chart-card">
+        <canvas id="salesChart"></canvas>
+      </div>
+
       <div class="card">
-        <h3>Taxa de conversão</h3>
-        <p>12,5%</p>
+        <span class="label">Aprovação cartão</span>
+        <span class="value">0%</span>
       </div>
-    </div>
-    <div class="chart-container">
-      <h3 style="margin-bottom: 1rem; color: #374151">Gráfico de vendas</h3>
-      <canvas id="salesChart"></canvas>
-    </div>
-  </main>  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  <script>
-    const ctx = document.getElementById('salesChart').getContext('2d');
-    const salesChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-        datasets: [{
-          label: 'Vendas da semana',
-          data: [120, 190, 300, 250, 220, 170, 90],
-          backgroundColor: 'rgba(99, 102, 241, 0.2)',
-          borderColor: 'rgba(99, 102, 241, 1)',
-          borderWidth: 2,
-          fill: true,
-          tension: 0.4
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-  </script></body>
+
+      <div class="card">
+        <span class="label">Vendas 1-click da rede Kiwify</span>
+        <span class="value">R$ 0,00 — 0%</span>
+      </div>
+
+      <div class="card">
+        <span class="label">Reembolso</span>
+        <span class="value">0%</span>
+      </div>
+
+      <div class="card">
+        <span class="label">Chargeback</span>
+        <span class="value">0%</span>
+      </div>
+
+      <div class="card">
+        <span class="label">Conversão boleto</span>
+        <span class="value">0%</span>
+      </div>
+
+      <div class="card">
+        <span class="label">Boletos gerados</span>
+        <span class="value">0</span>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
 </html>
