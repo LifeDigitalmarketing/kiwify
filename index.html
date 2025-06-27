@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html><html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,71 +9,67 @@
       background-color: #f8fafc;
       margin: 0;
       padding: 20px;
-    }
+    }.dashboard {
+  max-width: 600px;
+  margin: auto;
+}
 
-    .dashboard {
-      max-width: 600px;
-      margin: auto;
-    }
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  margin-bottom: 20px;
+}
 
-    .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      padding: 20px;
-      margin-bottom: 20px;
-    }
+.title {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 6px;
+}
 
-    .title {
-      font-size: 14px;
-      color: #64748b;
-      margin: 0 0 6px;
-    }
+.value {
+  font-size: 20px;
+  font-weight: bold;
+  color: #0f172a;
+  margin: 0;
+}
 
-    .value {
-      font-size: 20px;
-      font-weight: bold;
-      color: #0f172a;
-      margin: 0;
-    }
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
 
-    canvas {
-      width: 100% !important;
-      height: auto !important;
-    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="dashboard">
-    <h1>Dashboard</h1>
+    <h1>Dashboard</h1><div class="card">
+  <p class="title">Valor líquido</p>
+  <p class="value">R$ 13,49</p>
+</div>
 
-    <div class="card">
-      <p class="title">Valor líquido</p>
-      <p class="value">R$ 13,49</p>
-    </div>
+<div class="card">
+  <p class="title">Vendas</p>
+  <p class="value">1</p>
+</div>
 
-    <div class="card">
-      <p class="title">Vendas</p>
-      <p class="value">1</p>
-    </div>
+<div class="card">
+  <canvas id="salesChart"></canvas>
+</div>
 
-    <div class="card">
-      <canvas id="salesChart"></canvas>
-    </div>
+<div class="card">
+  <p class="title">Aprovação cartão</p>
+  <p class="value">0%</p>
+</div>
 
-    <div class="card">
-      <p class="title">Aprovação cartão</p>
-      <p class="value">0%</p>
-    </div>
+<div class="card">
+  <p class="title">Vendas 1-click da rede Kiwify</p>
+  <p class="value">R$ 0,00 - 0%</p>
+</div>
 
-    <div class="card">
-      <p class="title">Vendas 1-click da rede Kiwify</p>
-      <p class="value">R$ 0,00 - 0%</p>
-    </div>
-  </div>
-
-  <script>
+  </div>  <script>
     const ctx = document.getElementById('salesChart').getContext('2d');
     const labels = ['Ago 15, 0:00', 'Ago 15, 3:00', 'Ago 15, 6:00', 'Ago 15, 9:00', 'Ago 15, 12:00', 'Ago 15, 23:59'];
     const salesData = [0, 13.49, 0, 0, 0, 0];
@@ -88,13 +83,13 @@
           label: 'Vendas',
           data: salesData,
           borderColor: '#4a4fff',
-          backgroundColor: 'rgba(74, 79, 255, 0.1)',
+          backgroundColor: 'transparent',
           tension: 0.3,
-          pointRadius: 6,
-          pointHoverRadius: 8,
+          pointRadius: context => context.dataIndex === 1 ? 0 : 0,
+          pointHoverRadius: 6,
           pointBackgroundColor: '#4a4fff',
           pointBorderColor: '#ffffff',
-          pointBorderWidth: 3,
+          pointBorderWidth: 2,
           fill: false
         }]
       },
@@ -114,7 +109,7 @@
             bodyColor: '#4b5563',
             titleFont: { size: 13, weight: 'bold' },
             bodyFont: { size: 13 },
-            padding: 12,
+            padding: 10,
             cornerRadius: 6,
             displayColors: false,
             callbacks: {
@@ -142,6 +137,10 @@
               display: false
             }
           }
+        },
+        hover: {
+          mode: 'nearest',
+          intersect: false
         }
       },
       plugins: [{
@@ -163,10 +162,20 @@
             ctx.strokeStyle = '#d1d5db';
             ctx.stroke();
             ctx.restore();
+
+            // Triângulo (indicador da venda)
+            if (salesData[activePoint.index] > 0) {
+              ctx.beginPath();
+              ctx.moveTo(x, activePoint.element.y - 10);
+              ctx.lineTo(x - 6, activePoint.element.y);
+              ctx.lineTo(x + 6, activePoint.element.y);
+              ctx.closePath();
+              ctx.fillStyle = '#4a4fff';
+              ctx.fill();
+            }
           }
         }
       }]
     });
-  </script>
-</body>
+  </script></body>
 </html>
