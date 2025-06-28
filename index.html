@@ -131,7 +131,6 @@
           fill: false,
           pointRadius: 0,
           pointHoverRadius: 0,
-          pointStyle: false,
           tension: 0
         }]
       },
@@ -152,29 +151,28 @@
                 return;
               }
 
-              const index = tooltipModel.dataPoints[0].dataIndex;
+              const index = context.tooltip.dataPoints[0].dataIndex;
               const value = context.chart.data.datasets[0].data[index];
               const label = context.chart.data.labels[index];
 
               const x = context.chart.scales.x.getPixelForValue(index);
               const y = context.chart.scales.y.getPixelForValue(value);
 
-              // Tooltip
-              tooltip.innerHTML = `<strong>${label}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: ${value > 0 ? 1 : 0}`;
-              tooltip.style.left = `${x + 15}px`;
-              tooltip.style.top = `${y - 40}px`;
-              tooltip.style.display = 'block';
-
-              // Linha pontilhada
-              vline.style.left = `${x}px`;
-              vline.style.display = 'block';
-
-              // Bolinha azul no topo do triângulo
               if (value > 0) {
+                tooltip.innerHTML = `<strong>${label}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: 1`;
+                tooltip.style.left = `${x + 15}px`;
+                tooltip.style.top = `${y - 40}px`;
+                tooltip.style.display = 'block';
+
+                vline.style.left = `${x}px`;
+                vline.style.display = 'block';
+
                 dot.style.left = `${x}px`;
                 dot.style.top = `${y}px`;
                 dot.style.display = 'block';
               } else {
+                tooltip.style.display = 'none';
+                vline.style.display = 'none';
                 dot.style.display = 'none';
               }
             }
@@ -188,9 +186,7 @@
           x: {
             grid: { display: false },
             ticks: {
-              maxTicksLimit: 24,
               autoSkip: false,
-              callback: (val, index, values) => values[index].label,
               color: '#555',
               font: { size: 12 }
             }
