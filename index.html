@@ -1,8 +1,9 @@
+<!-- Substitua todo o conteúdo anterior por esse -->
 <!DOCTYPE html><html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Kiwify Clone - Fiel</title>
+  <title>Dashboard Kiwify Clone - Corrigido</title>
   <style>
     body {
       margin: 0;
@@ -128,8 +129,8 @@
           borderColor: '#3b82f6',
           borderWidth: 2,
           fill: false,
-          pointRadius: 4,
-          pointHoverRadius: 5,
+          pointRadius: 0,
+          pointHoverRadius: 0,
           backgroundColor: '#3b82f6',
           tension: 0
         }]
@@ -158,20 +159,17 @@
               const caretX = tooltipModel.caretX;
               const caretY = tooltipModel.caretY;
 
-              // Tooltip
               tooltip.innerHTML = `<strong>${label}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: ${value > 0 ? 1 : 0}`;
               tooltip.style.left = `${caretX + 12}px`;
               tooltip.style.top = `${caretY - 50}px`;
               tooltip.style.display = 'block';
 
-              // Linha vertical
               vline.style.left = `${caretX}px`;
               vline.style.display = 'block';
 
-              // Bolinha no topo
               dot.style.left = `${caretX}px`;
               dot.style.top = `${caretY}px`;
-              dot.style.display = 'block';
+              dot.style.display = value > 0 ? 'block' : 'none';
             }
           }
         },
@@ -185,7 +183,6 @@
             ticks: {
               maxTicksLimit: 24,
               autoSkip: false,
-              callback: (val, index, values) => values[index].label,
               color: '#555',
               font: { size: 12 }
             }
