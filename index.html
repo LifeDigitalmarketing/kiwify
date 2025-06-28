@@ -1,8 +1,9 @@
-<!DOCTYPE html><html lang="pt-br">
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Kiwify Clone - Sem Triângulo Extra</title>
+  <title>Dashboard Kiwify Clone</title>
   <style>
     body {
       margin: 0;
@@ -68,12 +69,12 @@
     }
     .dot {
       position: absolute;
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       background-color: #3b82f6;
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      z-index: 6;
+      z-index: 10;
       display: none;
     }
   </style>
@@ -111,7 +112,6 @@
     const vline = document.getElementById('vline');
     const dot = document.getElementById('dot');
     const chartCard = document.getElementById('chartCard');
-
     let locked = false;
 
     const chart = new Chart(canvas.getContext('2d'), {
@@ -125,7 +125,7 @@
         ],
         datasets: [{
           label: 'Vendas',
-          data: [0, 0, 0, 13.49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          data: [0, 0, 0, 0, 0, 0, 0, 13.49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           borderColor: '#3b82f6',
           borderWidth: 2,
           fill: false,
@@ -156,21 +156,23 @@
               const value = context.chart.data.datasets[0].data[index];
               const label = context.chart.data.labels[index];
 
-              const caretX = tooltipModel.caretX;
-              const caretY = tooltipModel.caretY;
+              const x = context.chart.scales.x.getPixelForValue(index);
+              const y = context.chart.scales.y.getPixelForValue(value);
 
+              // Tooltip
               tooltip.innerHTML = `<strong>${label}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: ${value > 0 ? 1 : 0}`;
-              tooltip.style.left = `${caretX + 15}px`;
-              tooltip.style.top = `${caretY - 40}px`;
+              tooltip.style.left = `${x + 15}px`;
+              tooltip.style.top = `${y - 40}px`;
               tooltip.style.display = 'block';
 
-              vline.style.left = `${caretX - 0.5}px`;
+              // Linha pontilhada
+              vline.style.left = `${x}px`;
               vline.style.display = 'block';
 
-              // Mostrar bolinha apenas no ponto com valor > 0
+              // Bolinha azul no topo do triângulo
               if (value > 0) {
-                dot.style.left = `${caretX}px`;
-                dot.style.top = `${caretY}px`;
+                dot.style.left = `${x}px`;
+                dot.style.top = `${y}px`;
                 dot.style.display = 'block';
               } else {
                 dot.style.display = 'none';
