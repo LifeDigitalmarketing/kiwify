@@ -126,7 +126,13 @@
             enabled: false,
             external: context => {
               const tooltipModel = context.tooltip;
-              if (!tooltipModel || tooltipModel.opacity === 0) return;
+              if (!tooltipModel || tooltipModel.opacity === 0) {
+                if (!locked) {
+                  tooltip.style.display = 'none';
+                  vline.style.display = 'none';
+                }
+                return;
+              }
 
               const index = tooltipModel.dataPoints[0].dataIndex;
               const value = context.chart.data.datasets[0].data[index];
@@ -142,14 +148,6 @@
 
               vline.style.left = `${caretX - 0.5}px`;
               vline.style.display = 'block';
-
-              if (!locked) {
-                clearTimeout(tooltip.timeout);
-                tooltip.timeout = setTimeout(() => {
-                  tooltip.style.display = 'none';
-                  vline.style.display = 'none';
-                }, 1000);
-              }
             }
           }
         },
@@ -183,6 +181,20 @@
         vline.style.display = 'none';
       }
     }
+
+    chartCard.addEventListener('mouseenter', () => {
+      if (!locked) {
+        tooltip.style.display = 'block';
+        vline.style.display = 'block';
+      }
+    });
+
+    chartCard.addEventListener('mouseleave', () => {
+      if (!locked) {
+        tooltip.style.display = 'none';
+        vline.style.display = 'none';
+      }
+    });
 
     chartCard.addEventListener('click', toggleLock);
     chartCard.addEventListener('touchstart', toggleLock);
