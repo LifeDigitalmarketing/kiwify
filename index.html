@@ -1,7 +1,8 @@
-<!DOCTYPE html><html lang="pt-br"><head>
+<!DOCTYPE html><html lang="pt-br">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Kiwify Clone - Sem Triângulo Extra</title>
+  <title>Dashboard Kiwify Clone 100%</title>
   <style>
     body {
       margin: 0;
@@ -32,7 +33,7 @@
     }
     .chart-card {
       position: relative;
-      height: 160px;
+      height: 130px;
     }
     canvas {
       width: 100% !important;
@@ -58,11 +59,21 @@
       background: repeating-linear-gradient(
         to top,
         #cbd5e0,
-        #cbd5e0 6px,
-        transparent 6px,
-        transparent 12px
+        #cbd5e0 3px,
+        transparent 3px,
+        transparent 6px
       );
       z-index: 5;
+      display: none;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #2b59c3;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 6;
       display: none;
     }
   </style>
@@ -73,48 +84,42 @@
     <div class="card">
       <p>Valor líquido</p>
       <h2>R$ 13,49</h2>
-    </div><div class="card">
-  <p>Vendas</p>
-  <h2>1</h2>
-</div>
-
-<div class="card chart-card" id="chartCard">
-  <canvas id="salesChart"></canvas>
-  <div id="tooltip" class="tooltip"></div>
-  <div id="vline" class="vertical-line"></div>
-</div>
-
-<div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: #555;">
-  <span>Hoje, 0:00</span>
-  <span>Hoje, 23:59</span>
-</div>
-
+    </div>
+    <div class="card">
+      <p>Vendas</p>
+      <h2>1</h2>
+    </div>
+    <div class="card chart-card" id="chartCard">
+      <canvas id="salesChart"></canvas>
+      <div id="tooltip" class="tooltip"></div>
+      <div id="vline" class="vertical-line"></div>
+      <div id="dot" class="dot"></div>
+    </div>
+    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: #555;">
+      <span>Hoje, 0:00</span>
+      <span>Hoje, 23:59</span>
+    </div>
   </div>  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  <script>
     const canvas = document.getElementById('salesChart');
     const tooltip = document.getElementById('tooltip');
     const vline = document.getElementById('vline');
+    const dot = document.getElementById('dot');
     const chartCard = document.getElementById('chartCard');
-
-    let locked = false;
+    let fixed = false;
 
     const chart = new Chart(canvas.getContext('2d'), {
       type: 'line',
       data: {
-        labels: [
-          '00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
-          '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
-          '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
-          '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '23:59'
-        ],
+        labels: ['Hoje, 0:00', '3:00', '6:00', '9:00', '12:00', '15:00', '18:00', 'Hoje, 23:59'],
         datasets: [{
           label: 'Vendas',
-          data: [0, 0, 0, 13.49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          borderColor: '#3b82f6',
+          data: [0, 13.49, 0, 0, 0, 0, 0, 0],
+          borderColor: '#2b59c3',
           borderWidth: 2,
           fill: false,
-          pointRadius: 0,
+          pointRadius: 6,
+          pointBackgroundColor: '#2b59c3',
           pointHoverRadius: 0,
-          pointStyle: false,
           tension: 0
         }]
       },
@@ -127,9 +132,10 @@
             external: context => {
               const tooltipModel = context.tooltip;
               if (!tooltipModel || tooltipModel.opacity === 0) {
-                if (!locked) {
+                if (!fixed) {
                   tooltip.style.display = 'none';
                   vline.style.display = 'none';
+                  dot.style.display = 'none';
                 }
                 return;
               }
@@ -146,8 +152,16 @@
               tooltip.style.top = `${caretY - 40}px`;
               tooltip.style.display = 'block';
 
-              vline.style.left = `${caretX - 0.5}px`;
+              vline.style.left = `${caretX}px`;
               vline.style.display = 'block';
+
+              if (value > 0) {
+                dot.style.left = `${caretX}px`;
+                dot.style.top = `${caretY}px`;
+                dot.style.display = 'block';
+              } else {
+                dot.style.display = 'none';
+              }
             }
           }
         },
@@ -159,9 +173,11 @@
           x: {
             grid: { display: false },
             ticks: {
-              maxTicksLimit: 24,
-              autoSkip: false,
-              callback: (val, index, values) => values[index].label,
+              callback: (value, index) => {
+                if (index === 0) return 'Hoje, 0:00';
+                if (index === 7) return 'Hoje, 23:59';
+                return '';
+              },
               color: '#555',
               font: { size: 12 }
             }
@@ -174,29 +190,21 @@
       }
     });
 
-    function toggleLock() {
-      locked = !locked;
-      if (!locked) {
-        tooltip.style.display = 'none';
-        vline.style.display = 'none';
-      }
-    }
-
-    chartCard.addEventListener('mouseenter', () => {
-      if (!locked) {
-        tooltip.style.display = 'block';
-        vline.style.display = 'block';
-      }
-    });
-
     chartCard.addEventListener('mouseleave', () => {
-      if (!locked) {
+      if (!fixed) {
         tooltip.style.display = 'none';
         vline.style.display = 'none';
+        dot.style.display = 'none';
       }
     });
 
-    chartCard.addEventListener('click', toggleLock);
-    chartCard.addEventListener('touchstart', toggleLock);
+    chartCard.addEventListener('click', () => {
+      fixed = !fixed;
+      if (!fixed) {
+        tooltip.style.display = 'none';
+        vline.style.display = 'none';
+        dot.style.display = 'none';
+      }
+    });
   </script></body>
 </html>
