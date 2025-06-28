@@ -153,14 +153,17 @@
 
               const index = context.tooltip.dataPoints[0].dataIndex;
               const value = context.chart.data.datasets[0].data[index];
-              const label = context.chart.data.labels[index];
 
-              const x = context.chart.scales.x.getPixelForValue(index);
-              const y = context.chart.scales.y.getPixelForValue(value);
+              // Corrigir posição do ponto com base no gráfico
+              const point = context.chart.getDatasetMeta(0).data[index];
+              if (!point) return;
+
+              const x = point.x;
+              const y = point.y;
 
               if (value > 0) {
-                tooltip.innerHTML = `<strong>${label}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: 1`;
-                tooltip.style.left = `${x + 15}px`;
+                tooltip.innerHTML = `<strong>${context.chart.data.labels[index]}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: 1`;
+                tooltip.style.left = `${x + 10}px`;
                 tooltip.style.top = `${y - 40}px`;
                 tooltip.style.display = 'block';
 
@@ -186,7 +189,8 @@
           x: {
             grid: { display: false },
             ticks: {
-              autoSkip: false,
+              autoSkip: true,
+              maxTicksLimit: 5,
               color: '#555',
               font: { size: 12 }
             }
