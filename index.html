@@ -1,9 +1,8 @@
-<!-- Substitua todo o conteúdo anterior por esse -->
 <!DOCTYPE html><html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Kiwify Clone - Corrigido</title>
+  <title>Dashboard Kiwify Clone - Sem Triângulo Extra</title>
   <style>
     body {
       margin: 0;
@@ -46,7 +45,7 @@
       padding: 8px 10px;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      font-size: 13px;
+      font-size: 14px;
       pointer-events: none;
       white-space: nowrap;
       z-index: 10;
@@ -60,9 +59,9 @@
       background: repeating-linear-gradient(
         to top,
         #cbd5e0,
-        #cbd5e0 4px,
-        transparent 4px,
-        transparent 8px
+        #cbd5e0 6px,
+        transparent 6px,
+        transparent 12px
       );
       z-index: 5;
       display: none;
@@ -86,6 +85,7 @@
       <p>Valor líquido</p>
       <h2>R$ 13,49</h2>
     </div>
+
     <div class="card">
       <p>Vendas</p>
       <h2>1</h2>
@@ -131,7 +131,7 @@
           fill: false,
           pointRadius: 0,
           pointHoverRadius: 0,
-          backgroundColor: '#3b82f6',
+          pointStyle: false,
           tension: 0
         }]
       },
@@ -160,16 +160,21 @@
               const caretY = tooltipModel.caretY;
 
               tooltip.innerHTML = `<strong>${label}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: ${value > 0 ? 1 : 0}`;
-              tooltip.style.left = `${caretX + 12}px`;
-              tooltip.style.top = `${caretY - 50}px`;
+              tooltip.style.left = `${caretX + 15}px`;
+              tooltip.style.top = `${caretY - 40}px`;
               tooltip.style.display = 'block';
 
-              vline.style.left = `${caretX}px`;
+              vline.style.left = `${caretX - 0.5}px`;
               vline.style.display = 'block';
 
-              dot.style.left = `${caretX}px`;
-              dot.style.top = `${caretY}px`;
-              dot.style.display = value > 0 ? 'block' : 'none';
+              // Mostrar bolinha apenas no ponto com valor > 0
+              if (value > 0) {
+                dot.style.left = `${caretX}px`;
+                dot.style.top = `${caretY}px`;
+                dot.style.display = 'block';
+              } else {
+                dot.style.display = 'none';
+              }
             }
           }
         },
@@ -183,6 +188,7 @@
             ticks: {
               maxTicksLimit: 24,
               autoSkip: false,
+              callback: (val, index, values) => values[index].label,
               color: '#555',
               font: { size: 12 }
             }
@@ -203,6 +209,13 @@
         dot.style.display = 'none';
       }
     }
+
+    chartCard.addEventListener('mouseenter', () => {
+      if (!locked) {
+        tooltip.style.display = 'block';
+        vline.style.display = 'block';
+      }
+    });
 
     chartCard.addEventListener('mouseleave', () => {
       if (!locked) {
