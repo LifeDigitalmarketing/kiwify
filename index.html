@@ -40,17 +40,19 @@
       width: 100% !important;
       height: 100% !important;
     }
-    .tooltip {
+    .tooltip, .dot {
       position: absolute;
+      z-index: 10;
+      display: none;
+      pointer-events: none;
+    }
+    .tooltip {
       background: white;
       padding: 8px 10px;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
       font-size: 14px;
-      pointer-events: none;
       white-space: nowrap;
-      z-index: 10;
-      display: none;
     }
     .vertical-line {
       position: absolute;
@@ -68,14 +70,11 @@
       display: none;
     }
     .dot {
-      position: absolute;
       width: 10px;
       height: 10px;
-      background-color: #3b82f6;
+      background: #3b82f6;
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      z-index: 10;
-      display: none;
     }
   </style>
 </head>
@@ -86,19 +85,16 @@
       <p>Valor líquido</p>
       <h2>R$ 13,49</h2>
     </div>
-
     <div class="card">
       <p>Vendas</p>
       <h2>1</h2>
     </div>
-
     <div class="card chart-card" id="chartCard">
       <canvas id="salesChart"></canvas>
       <div id="tooltip" class="tooltip"></div>
       <div id="vline" class="vertical-line"></div>
       <div id="dot" class="dot"></div>
     </div>
-
     <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: #555;">
       <span>Hoje, 0:00</span>
       <span>Hoje, 23:59</span>
@@ -121,11 +117,11 @@
           '00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
           '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
           '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
-          '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '23:59'
+          '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'
         ],
         datasets: [{
           label: 'Vendas',
-          data: [0, 0, 0, 0, 0, 0, 0, 13.49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          data: [0, 0, 0, 0, 0, 0, 0, 13.49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           borderColor: '#3b82f6',
           borderWidth: 2,
           fill: false,
@@ -140,8 +136,10 @@
           legend: { display: false },
           tooltip: {
             enabled: false,
-            external: context => {
-              const tooltipModel = context.tooltip;
+            external: ctx => {
+              const tooltipModel = ctx.tooltip;
+              const chartInstance = ctx.chart;
+              const meta = chartInstance.getDatasetMeta(0);
               if (!tooltipModel || tooltipModel.opacity === 0) {
                 if (!locked) {
                   tooltip.style.display = 'none';
@@ -151,31 +149,30 @@
                 return;
               }
 
-              const index = context.tooltip.dataPoints[0].dataIndex;
-              const value = context.chart.data.datasets[0].data[index];
+              const dataIndex = tooltipModel.dataPoints[0].dataIndex;
+              const value = ctx.chart.data.datasets[0].data[dataIndex];
+              const point = meta.data[dataIndex];
+              const label = ctx.chart.data.labels[dataIndex];
 
-              // Corrigir posição do ponto com base no gráfico
-              const point = context.chart.getDatasetMeta(0).data[index];
-              if (!point) return;
+              const showDot = value > 0;
 
+              // Posição
               const x = point.x;
               const y = point.y;
 
-              if (value > 0) {
-                tooltip.innerHTML = `<strong>${context.chart.data.labels[index]}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: 1`;
-                tooltip.style.left = `${x + 10}px`;
-                tooltip.style.top = `${y - 40}px`;
-                tooltip.style.display = 'block';
+              tooltip.innerHTML = `<strong>${label}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: ${value > 0 ? 1 : 0}`;
+              tooltip.style.left = `${x + 10}px`;
+              tooltip.style.top = `${y - 40}px`;
+              tooltip.style.display = 'block';
 
-                vline.style.left = `${x}px`;
-                vline.style.display = 'block';
+              vline.style.left = `${x}px`;
+              vline.style.display = 'block';
 
+              if (showDot) {
                 dot.style.left = `${x}px`;
                 dot.style.top = `${y}px`;
                 dot.style.display = 'block';
               } else {
-                tooltip.style.display = 'none';
-                vline.style.display = 'none';
                 dot.style.display = 'none';
               }
             }
@@ -190,7 +187,7 @@
             grid: { display: false },
             ticks: {
               autoSkip: true,
-              maxTicksLimit: 5,
+              maxTicksLimit: 6,
               color: '#555',
               font: { size: 12 }
             }
@@ -211,13 +208,6 @@
         dot.style.display = 'none';
       }
     }
-
-    chartCard.addEventListener('mouseenter', () => {
-      if (!locked) {
-        tooltip.style.display = 'block';
-        vline.style.display = 'block';
-      }
-    });
 
     chartCard.addEventListener('mouseleave', () => {
       if (!locked) {
