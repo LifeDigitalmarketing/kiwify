@@ -142,7 +142,6 @@
               const index = tooltipModel.dataPoints[0].dataIndex;
               const value = context.chart.data.datasets[0].data[index];
               const label = context.chart.data.labels[index];
-
               const caretX = tooltipModel.caretX;
               const caretY = tooltipModel.caretY;
 
@@ -151,7 +150,11 @@
               tooltip.style.top = `${caretY - 40}px`;
               tooltip.style.display = 'block';
 
-              vline.style.left = `${caretX - 0.5}px`;
+              // 🛠 Corrigido: linha alinhada com o canvas dentro do card
+              const chartCardRect = chartCard.getBoundingClientRect();
+              const canvasRect = canvas.getBoundingClientRect();
+              const offsetX = canvasRect.left - chartCardRect.left;
+              vline.style.left = `${caretX + offsetX}px`;
               vline.style.display = 'block';
             }
           }
