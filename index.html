@@ -144,6 +144,90 @@
       z-index: 100;
     }
 
+    .custom-dropdown {
+  width: 100%;
+  background: white;
+  border: 2px solid #cdd3f5;
+  border-radius: 8px;
+  padding: 10px;
+  position: relative;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.selected-option {
+  font-size: 14px;
+}
+
+.dropdown-panel {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  padding: 12px;
+  z-index: 999;
+}
+
+.dropdown-panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px 0;
+}
+
+.dropdown-panel ul li {
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.dropdown-panel ul li:hover {
+  background-color: #f2f4f8;
+}
+
+.calendar {
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 13px;
+  gap: 4px;
+}
+
+.calendar-grid div {
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.calendar-grid .day {
+  font-weight: bold;
+  color: #555;
+}
+
+.calendar-grid .date:hover {
+  background-color: #e3e9f8;
+  cursor: pointer;
+}
+
+.calendar-grid .today {
+  background-color: #d0d8ff;
+  font-weight: bold;
+  }
+    
     .filters {
   display: flex;
   flex-direction: column;
@@ -167,8 +251,26 @@
   <div class="container">
     <h2>Dashboard</h2>
 
-    <div class="filters">
-      <select><option>Hoje</option></select>
+    <div class="custom-dropdown" onclick="toggleDropdown()">
+  <div class="selected-option" id="selectedOption">Hoje</div>
+  <div class="dropdown-panel" id="dropdownPanel">
+    <ul>
+      <li onclick="setOption('Hoje')">Hoje</li>
+      <li onclick="setOption('Últimos 7 dias')">Últimos 7 dias</li>
+      <li onclick="setOption('Últimos 30 dias')">Últimos 30 dias</li>
+      <li onclick="setOption('Tempo todo')">Tempo todo</li>
+    </ul>
+    <div class="calendar">
+      <div class="calendar-header">
+        <span onclick="prevMonth()">←</span>
+        <span id="calendarMonth">Junho</span>
+        <span id="calendarYear">2025</span>
+        <span onclick="nextMonth()">→</span>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+  </div>
+    </div>
       <select><option>Todos os produtos</option></select>
       <select><option>Todas as moedas</option></select>
     </div>
@@ -267,6 +369,90 @@
     }
 
     atualizarDashboard();
+  const dropdownPanel = document.getElementById('dropdownPanel');
+  const selectedOption = document.getElementById('selectedOption');
+
+  function toggleDropdown() {
+    dropdownPanel.style.display = dropdownPanel.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function setOption(value) {
+    selectedOption.innerText = value;
+    toggleDropdown();
+  }
+
+  // Calendário
+  const monthNames = [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ];
+
+  let currentDate = new Date();
+  let currentMonth = currentDate.getMonth();
+  let currentYear = currentDate.getFullYear();
+
+  function renderCalendar(month, year) {
+    const grid = document.getElementById('calendarGrid');
+    const monthLabel = document.getElementById('calendarMonth');
+    const yearLabel = document.getElementById('calendarYear');
+
+    grid.innerHTML = '';
+    monthLabel.innerText = monthNames[month];
+    yearLabel.innerText = year;
+
+    const days = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+    days.forEach(day => {
+      const div = document.createElement('div');
+      div.innerText = day;
+      div.classList.add('day');
+      grid.appendChild(div);
+    });
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const dayOffset = firstDay === 0 ? 6 : firstDay - 1;
+
+    for (let i = 0; i < dayOffset; i++) {
+      grid.appendChild(document.createElement('div'));
+    }
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    for (let i = 1; i <= daysInMonth; i++) {
+      const div = document.createElement('div');
+      div.innerText = i;
+      div.classList.add('date');
+      if (
+        i === currentDate.getDate() &&
+        month === currentDate.getMonth() &&
+        year === currentDate.getFullYear()
+      ) {
+        div.classList.add('today');
+      }
+      grid.appendChild(div);
+    }
+  }
+
+  function prevMonth() {
+    if (currentMonth === 0) {
+      currentMonth = 11;
+      currentYear--;
+    } else {
+      currentMonth--;
+    }
+    renderCalendar(currentMonth, currentYear);
+  }
+
+  function nextMonth() {
+    if (currentMonth === 11) {
+      currentMonth = 0;
+      currentYear++;
+    } else {
+      currentMonth++;
+    }
+    renderCalendar(currentMonth, currentYear);
+  }
+
+  renderCalendar(currentMonth, currentYear);
   </script>
 </body>
 </html>
