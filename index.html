@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<!DOCTYPE html><html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Kiwify Clone</title>
+  <title>Dashboard Kiwify Clone - Sem Triângulo Extra</title>
   <style>
     body {
       margin: 0;
@@ -67,16 +66,6 @@
       z-index: 5;
       display: none;
     }
-    .dot {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background: #3b82f6;
-      border-radius: 50%;
-      z-index: 10;
-      display: none;
-      transform: translate(-50%, -50%);
-    }
   </style>
 </head>
 <body>
@@ -96,7 +85,6 @@
       <canvas id="salesChart"></canvas>
       <div id="tooltip" class="tooltip"></div>
       <div id="vline" class="vertical-line"></div>
-      <div id="dot" class="dot"></div>
     </div>
 
     <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: #555;">
@@ -111,14 +99,8 @@
     const tooltip = document.getElementById('tooltip');
     const vline = document.getElementById('vline');
     const chartCard = document.getElementById('chartCard');
-    const dot = document.getElementById('dot');
 
     let locked = false;
-
-    const dataValues = [
-      0, 0, 0, 0, 0, 0, 0, 13.49, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    ];
 
     const chart = new Chart(canvas.getContext('2d'), {
       type: 'line',
@@ -131,7 +113,7 @@
         ],
         datasets: [{
           label: 'Vendas',
-          data: dataValues,
+          data: [0, 0, 0, 13.49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           borderColor: '#3b82f6',
           borderWidth: 2,
           fill: false,
@@ -153,38 +135,24 @@
                 if (!locked) {
                   tooltip.style.display = 'none';
                   vline.style.display = 'none';
-                  dot.style.display = 'none';
                 }
                 return;
               }
 
               const index = tooltipModel.dataPoints[0].dataIndex;
-              const value = dataValues[index];
+              const value = context.chart.data.datasets[0].data[index];
               const label = context.chart.data.labels[index];
+
               const caretX = tooltipModel.caretX;
               const caretY = tooltipModel.caretY;
 
-              // Linha pontilhada no local certo
-              const chartRect = chartCard.getBoundingClientRect();
-              const canvasRect = canvas.getBoundingClientRect();
-              const offsetX = canvasRect.left - chartRect.left;
-              vline.style.left = `${caretX + offsetX}px`;
-              vline.style.display = 'block';
-
-              // Tooltip
               tooltip.innerHTML = `<strong>${label}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: ${value > 0 ? 1 : 0}`;
-              tooltip.style.left = `${caretX + offsetX + 15}px`;
+              tooltip.style.left = `${caretX + 15}px`;
               tooltip.style.top = `${caretY - 40}px`;
               tooltip.style.display = 'block';
 
-              // Bolinha azul só aparece se for o ponto de venda
-              if (value > 0) {
-                dot.style.left = `${caretX + offsetX}px`;
-                dot.style.top = `${tooltipModel.caretY}px`;
-                dot.style.display = 'block';
-              } else {
-                dot.style.display = 'none';
-              }
+              vline.style.left = `${caretX - 0.5}px`;
+              vline.style.display = 'block';
             }
           }
         },
@@ -196,8 +164,9 @@
           x: {
             grid: { display: false },
             ticks: {
-              autoSkip: true,
-              maxTicksLimit: 8,
+              maxTicksLimit: 24,
+              autoSkip: false,
+              callback: (val, index, values) => values[index].label,
               color: '#555',
               font: { size: 12 }
             }
@@ -215,7 +184,6 @@
       if (!locked) {
         tooltip.style.display = 'none';
         vline.style.display = 'none';
-        dot.style.display = 'none';
       }
     }
 
@@ -230,7 +198,6 @@
       if (!locked) {
         tooltip.style.display = 'none';
         vline.style.display = 'none';
-        dot.style.display = 'none';
       }
     });
 
