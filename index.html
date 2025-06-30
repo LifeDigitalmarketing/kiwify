@@ -1,211 +1,215 @@
-<!DOCTYPE html><html lang="pt-br">
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Kiwify Clone - Sem Triângulo Extra</title>
+  <title>Dashboard Clone Kiwify</title>
   <style>
-    body {
-      margin: 0;
+    * {
+      box-sizing: border-box;
       font-family: 'Segoe UI', sans-serif;
-      background: #f4f5f7;
+      margin: 0;
+      padding: 0;
     }
+
+    body {
+      background-color: #f7f8fc;
+      color: #333;
+    }
+
+    header {
+      background-color: #006400;
+      color: #fff;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .menu-icon, .user-icon {
+      width: 30px;
+      height: 30px;
+      background-color: #ffffff44;
+      border-radius: 50%;
+    }
+
+    .progress-container {
+      flex: 1;
+      margin: 0 10px;
+    }
+
+    .progress-bar {
+      background-color: #ccc;
+      border-radius: 20px;
+      height: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress {
+      background-color: #00c853;
+      width: 0%;
+      height: 100%;
+      transition: width 0.5s;
+    }
+
     .dashboard {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 0 16px;
+      padding: 20px;
     }
+
+    .dashboard h2 {
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+
+    .filters select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
     .card {
       background: white;
       border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
-    .card p {
-      font-size: 14px;
-      color: #8a8a8a;
-      margin: 0 0 4px;
+
+    .card-title {
+      font-weight: bold;
+      color: #666;
+      margin-bottom: 5px;
     }
-    .card h2 {
-      margin: 0;
-      font-size: 20px;
-      color: #1e1e1e;
+
+    .card-value {
+      font-size: 1.2rem;
+      color: #000;
     }
-    .chart-card {
-      position: relative;
-      height: 160px;
-    }
-    canvas {
-      width: 100% !important;
-      height: 100% !important;
-    }
-    .tooltip {
-      position: absolute;
-      background: white;
-      padding: 8px 10px;
+
+    .graph-placeholder {
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(to right, #e3e3e3, #ccc);
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      font-size: 14px;
-      pointer-events: none;
-      white-space: nowrap;
-      z-index: 10;
-      display: none;
+      margin-top: 10px;
     }
-    .vertical-line {
-      position: absolute;
-      width: 1px;
-      height: 100%;
-      top: 0;
-      background: repeating-linear-gradient(
-        to top,
-        #cbd5e0,
-        #cbd5e0 6px,
-        transparent 6px,
-        transparent 12px
-      );
-      z-index: 5;
-      display: none;
+
+    @media (min-width: 600px) {
+      .filters {
+        display: flex;
+        gap: 10px;
+      }
+      .filters select {
+        flex: 1;
+        margin-bottom: 0;
+      }
     }
   </style>
 </head>
 <body>
+
+  <header>
+    <div class="menu-icon"></div>
+    <div class="progress-container">
+      <div style="font-size: 0.8rem;">R$ 0K / R$ 10K</div>
+      <div class="progress-bar">
+        <div class="progress" id="progressBar"></div>
+      </div>
+    </div>
+    <div class="user-icon"></div>
+  </header>
+
   <div class="dashboard">
-    <h1 style="font-size: 24px;">Dashboard</h1>
-    <div class="card">
-      <p>Valor líquido</p>
-      <h2>R$ 13,49</h2>
+    <h2>Dashboard</h2>
+
+    <div class="filters">
+      <select>
+        <option>Hoje</option>
+        <option>Ontem</option>
+        <option>Últimos 7 dias</option>
+      </select>
+      <select>
+        <option>Todos os produtos</option>
+      </select>
+      <select>
+        <option>Todas as moedas</option>
+      </select>
     </div>
 
     <div class="card">
-      <p>Vendas</p>
-      <h2>1</h2>
+      <div class="card-title">Valor líquido</div>
+      <div class="card-value" id="valorLiquido">R$ 0,00</div>
     </div>
 
-    <div class="card chart-card" id="chartCard">
-      <canvas id="salesChart"></canvas>
-      <div id="tooltip" class="tooltip"></div>
-      <div id="vline" class="vertical-line"></div>
+    <div class="card">
+      <div class="card-title">Vendas</div>
+      <div class="card-value" id="vendas">0</div>
+      <div class="graph-placeholder"></div>
     </div>
 
-    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: #555;">
-      <span>Hoje, 0:00</span>
-      <span>Hoje, 23:59</span>
+    <div class="card">
+      <div class="card-title">Aprovação cartão</div>
+      <div class="card-value" id="aprovacaoCartao">0%</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Vendas 1-click da rede Kiwify</div>
+      <div class="card-value" id="vendas1Click">R$ 0,00 – 0%</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Reembolso</div>
+      <div class="card-value" id="reembolso">0%</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Chargeback</div>
+      <div class="card-value" id="chargeback">0%</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Conversão boleto</div>
+      <div class="card-value" id="conversaoBoleto">0%</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Boletos gerados</div>
+      <div class="card-value" id="boletosGerados">0</div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    const canvas = document.getElementById('salesChart');
-    const tooltip = document.getElementById('tooltip');
-    const vline = document.getElementById('vline');
-    const chartCard = document.getElementById('chartCard');
+    // Simulando dados
+    const dados = {
+      valorLiquido: 1490.50,
+      vendas: 27,
+      aprovacaoCartao: 81,
+      vendas1Click: 130.90,
+      vendas1ClickPercent: 8,
+      reembolso: 1,
+      chargeback: 0,
+      conversaoBoleto: 25,
+      boletosGerados: 12
+    };
 
-    let locked = false;
-
-    const chart = new Chart(canvas.getContext('2d'), {
-      type: 'line',
-      data: {
-        labels: [
-          '00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
-          '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
-          '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
-          '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '23:59'
-        ],
-        datasets: [{
-          label: 'Vendas',
-          data: [0, 0, 0, 13.49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          borderColor: '#3b82f6',
-          borderWidth: 2,
-          fill: false,
-          pointRadius: 0,
-          pointHoverRadius: 0,
-          pointStyle: false,
-          tension: 0
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            enabled: false,
-            external: context => {
-              const tooltipModel = context.tooltip;
-              if (!tooltipModel || tooltipModel.opacity === 0) {
-                if (!locked) {
-                  tooltip.style.display = 'none';
-                  vline.style.display = 'none';
-                }
-                return;
-              }
-
-              const index = tooltipModel.dataPoints[0].dataIndex;
-              const value = context.chart.data.datasets[0].data[index];
-              const label = context.chart.data.labels[index];
-              const caretX = tooltipModel.caretX;
-              const caretY = tooltipModel.caretY;
-
-              tooltip.innerHTML = `<strong>${label}</strong><br>R$ ${value.toFixed(2)}<br>Vendas: ${value > 0 ? 1 : 0}`;
-              tooltip.style.left = `${caretX + 15}px`;
-              tooltip.style.top = `${caretY - 40}px`;
-              tooltip.style.display = 'block';
-
-              // 🛠 Corrigido: linha alinhada com o canvas dentro do card
-              const chartCardRect = chartCard.getBoundingClientRect();
-              const canvasRect = canvas.getBoundingClientRect();
-              const offsetX = canvasRect.left - chartCardRect.left;
-              vline.style.left = `${caretX + offsetX}px`;
-              vline.style.display = 'block';
-            }
-          }
-        },
-        interaction: {
-          mode: 'index',
-          intersect: false
-        },
-        scales: {
-          x: {
-            grid: { display: false },
-            ticks: {
-              maxTicksLimit: 24,
-              autoSkip: false,
-              callback: (val, index, values) => values[index].label,
-              color: '#555',
-              font: { size: 12 }
-            }
-          },
-          y: {
-            grid: { display: false },
-            ticks: { display: false }
-          }
-        }
-      }
-    });
-
-    function toggleLock() {
-      locked = !locked;
-      if (!locked) {
-        tooltip.style.display = 'none';
-        vline.style.display = 'none';
-      }
+    function atualizarDashboard() {
+      document.getElementById("valorLiquido").textContent = `R$ ${dados.valorLiquido.toFixed(2)}`;
+      document.getElementById("vendas").textContent = dados.vendas;
+      document.getElementById("aprovacaoCartao").textContent = `${dados.aprovacaoCartao}%`;
+      document.getElementById("vendas1Click").textContent = `R$ ${dados.vendas1Click} – ${dados.vendas1ClickPercent}%`;
+      document.getElementById("reembolso").textContent = `${dados.reembolso}%`;
+      document.getElementById("chargeback").textContent = `${dados.chargeback}%`;
+      document.getElementById("conversaoBoleto").textContent = `${dados.conversaoBoleto}%`;
+      document.getElementById("boletosGerados").textContent = dados.boletosGerados;
+      
+      const progresso = (dados.valorLiquido / 10000) * 100;
+      document.getElementById("progressBar").style.width = `${Math.min(progresso, 100)}%`;
     }
 
-    chartCard.addEventListener('mouseenter', () => {
-      if (!locked) {
-        tooltip.style.display = 'block';
-        vline.style.display = 'block';
-      }
-    });
-
-    chartCard.addEventListener('mouseleave', () => {
-      if (!locked) {
-        tooltip.style.display = 'none';
-        vline.style.display = 'none';
-      }
-    });
-
-    chartCard.addEventListener('click', toggleLock);
-    chartCard.addEventListener('touchstart', toggleLock);
+    atualizarDashboard();
   </script>
 </body>
 </html>
