@@ -3,98 +3,145 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Clone Kiwify</title>
+  <title>Dashboard Kiwify Clone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
     }
 
     body {
-      background-color: #f7f8fc;
+      background-color: #f6f7fb;
       color: #333;
     }
 
     header {
-      background-color: #006400;
-      color: #fff;
-      padding: 15px;
+      background-color: #05632a;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      color: white;
     }
 
-    .menu-icon, .user-icon {
-      width: 30px;
-      height: 30px;
-      background-color: #ffffff44;
-      border-radius: 50%;
-    }
-
-    .progress-container {
+    .progress-box {
       flex: 1;
-      margin: 0 10px;
+      margin: 0 12px;
+    }
+
+    .progress-text {
+      font-size: 13px;
+      margin-bottom: 4px;
     }
 
     .progress-bar {
-      background-color: #ccc;
+      width: 100%;
+      background-color: #e0e0e0;
+      height: 8px;
       border-radius: 20px;
-      height: 10px;
-      position: relative;
       overflow: hidden;
     }
 
     .progress {
-      background-color: #00c853;
-      width: 0%;
       height: 100%;
-      transition: width 0.5s;
+      width: 14%;
+      background-color: #22c55e;
     }
 
-    .dashboard {
-      padding: 20px;
+    .icon-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.3);
     }
 
-    .dashboard h2 {
-      margin-bottom: 15px;
-      font-size: 1.5rem;
+    .container {
+      padding: 16px;
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 16px;
     }
 
     .filters select {
       width: 100%;
-      margin-bottom: 10px;
-      padding: 8px;
-      border-radius: 5px;
+      padding: 10px;
+      border-radius: 8px;
       border: 1px solid #ccc;
+      margin-bottom: 10px;
+      background-color: white;
     }
 
     .card {
       background: white;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .card-icon {
+      width: 36px;
+      height: 36px;
+      background-color: #f1f2f6;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #6b7280;
+      flex-shrink: 0;
+    }
+
+    .card-content {
+      flex: 1;
     }
 
     .card-title {
-      font-weight: bold;
-      color: #666;
-      margin-bottom: 5px;
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 4px;
     }
 
     .card-value {
-      font-size: 1.2rem;
-      color: #000;
+      font-size: 16px;
+      font-weight: 600;
     }
 
-    .graph-placeholder {
+    .graph {
       width: 100%;
-      height: 120px;
-      background: linear-gradient(to right, #e3e3e3, #ccc);
+      height: 100px;
+      background-image: linear-gradient(to right, #e0e0e0 50%, transparent 0);
+      background-size: 8px 100%;
       border-radius: 8px;
       margin-top: 10px;
+      position: relative;
+    }
+
+    .chat-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #000;
+      color: white;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      font-size: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      z-index: 100;
     }
 
     @media (min-width: 600px) {
@@ -103,7 +150,6 @@
         gap: 10px;
       }
       .filters select {
-        flex: 1;
         margin-bottom: 0;
       }
     }
@@ -112,101 +158,116 @@
 <body>
 
   <header>
-    <div class="menu-icon"></div>
-    <div class="progress-container">
-      <div style="font-size: 0.8rem;">R$ 0K / R$ 10K</div>
+    <div class="icon-circle"></div>
+    <div class="progress-box">
+      <div class="progress-text">R$ 0K / R$ 10K</div>
       <div class="progress-bar">
-        <div class="progress" id="progressBar"></div>
+        <div class="progress"></div>
       </div>
     </div>
-    <div class="user-icon"></div>
+    <div class="icon-circle"></div>
   </header>
 
-  <div class="dashboard">
+  <div class="container">
     <h2>Dashboard</h2>
 
     <div class="filters">
-      <select>
-        <option>Hoje</option>
-        <option>Ontem</option>
-        <option>Últimos 7 dias</option>
-      </select>
-      <select>
-        <option>Todos os produtos</option>
-      </select>
-      <select>
-        <option>Todas as moedas</option>
-      </select>
+      <select><option>Hoje</option></select>
+      <select><option>Todos os produtos</option></select>
+      <select><option>Todas as moedas</option></select>
     </div>
 
     <div class="card">
-      <div class="card-title">Valor líquido</div>
-      <div class="card-value" id="valorLiquido">R$ 0,00</div>
+      <div class="card-icon">💰</div>
+      <div class="card-content">
+        <div class="card-title">Valor líquido</div>
+        <div class="card-value" id="valorLiquido">R$ 0,00</div>
+      </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Vendas</div>
-      <div class="card-value" id="vendas">0</div>
-      <div class="graph-placeholder"></div>
+      <div class="card-icon">📈</div>
+      <div class="card-content">
+        <div class="card-title">Vendas</div>
+        <div class="card-value" id="vendas">0</div>
+        <div class="graph"></div>
+      </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Aprovação cartão</div>
-      <div class="card-value" id="aprovacaoCartao">0%</div>
+      <div class="card-icon">💳</div>
+      <div class="card-content">
+        <div class="card-title">Aprovação cartão</div>
+        <div class="card-value" id="aprovacaoCartao">0%</div>
+      </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Vendas 1-click da rede Kiwify</div>
-      <div class="card-value" id="vendas1Click">R$ 0,00 – 0%</div>
+      <div class="card-icon">🌐</div>
+      <div class="card-content">
+        <div class="card-title">Vendas 1-click da rede Kiwify</div>
+        <div class="card-value" id="vendas1Click">R$ 0,00 – 0%</div>
+      </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Reembolso</div>
-      <div class="card-value" id="reembolso">0%</div>
+      <div class="card-icon">↩️</div>
+      <div class="card-content">
+        <div class="card-title">Reembolso</div>
+        <div class="card-value" id="reembolso">0%</div>
+      </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Chargeback</div>
-      <div class="card-value" id="chargeback">0%</div>
+      <div class="card-icon">🚫</div>
+      <div class="card-content">
+        <div class="card-title">Chargeback</div>
+        <div class="card-value" id="chargeback">0%</div>
+      </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Conversão boleto</div>
-      <div class="card-value" id="conversaoBoleto">0%</div>
+      <div class="card-icon">🧾</div>
+      <div class="card-content">
+        <div class="card-title">Conversão boleto</div>
+        <div class="card-value" id="conversaoBoleto">0%</div>
+      </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Boletos gerados</div>
-      <div class="card-value" id="boletosGerados">0</div>
+      <div class="card-icon">#️⃣</div>
+      <div class="card-content">
+        <div class="card-title">Boletos gerados</div>
+        <div class="card-value" id="boletosGerados">0</div>
+      </div>
     </div>
   </div>
+
+  <div class="chat-button">💬</div>
 
   <script>
     // Simulando dados
     const dados = {
-      valorLiquido: 1490.50,
-      vendas: 27,
-      aprovacaoCartao: 81,
-      vendas1Click: 130.90,
-      vendas1ClickPercent: 8,
-      reembolso: 1,
+      valorLiquido: 0,
+      vendas: 0,
+      aprovacaoCartao: 0,
+      vendas1Click: 0,
+      vendas1ClickPercent: 0,
+      reembolso: 0,
       chargeback: 0,
-      conversaoBoleto: 25,
-      boletosGerados: 12
+      conversaoBoleto: 0,
+      boletosGerados: 0
     };
 
     function atualizarDashboard() {
       document.getElementById("valorLiquido").textContent = `R$ ${dados.valorLiquido.toFixed(2)}`;
       document.getElementById("vendas").textContent = dados.vendas;
       document.getElementById("aprovacaoCartao").textContent = `${dados.aprovacaoCartao}%`;
-      document.getElementById("vendas1Click").textContent = `R$ ${dados.vendas1Click} – ${dados.vendas1ClickPercent}%`;
+      document.getElementById("vendas1Click").textContent = `R$ ${dados.vendas1Click.toFixed(2)} – ${dados.vendas1ClickPercent}%`;
       document.getElementById("reembolso").textContent = `${dados.reembolso}%`;
       document.getElementById("chargeback").textContent = `${dados.chargeback}%`;
       document.getElementById("conversaoBoleto").textContent = `${dados.conversaoBoleto}%`;
       document.getElementById("boletosGerados").textContent = dados.boletosGerados;
-      
-      const progresso = (dados.valorLiquido / 10000) * 100;
-      document.getElementById("progressBar").style.width = `${Math.min(progresso, 100)}%`;
     }
 
     atualizarDashboard();
